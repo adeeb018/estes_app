@@ -10,11 +10,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // double turns = 0.0;
   List<int> swipeList = [1,2,3,4,5];
   int currentView = 1;
 
-  int previousView = 0;
+  String currentfFont = 'MuseoModerno';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,25 +47,16 @@ class _HomePageState extends State<HomePage> {
             Stack(
               alignment: Alignment.center,
               children: [
-                buildBuilder(currentView),
+                rotatingContainer(currentView),
                 Image.asset("assets/images/rocket_1.png"),
               ],
             ),
             FlutterCarousel(
               options: CarouselOptions(
                 onPageChanged: (index,reason) {
-                  // if(currentView-1 == previousView || currentView < previousView){
-                  //   previousView = currentView;
-                  //   currentView--;
-                  // }else{
-                  //   currentView++;
-                  //   previousView++;
-                  // }
                   currentView = index+1;
-
-                  setState(() {
-                    // currentView = 1;
-                  });
+                  //setState is called to update the current page with respect to the current view
+                  setState(() {});
                 },
                 height: 50.0,
                 indicatorMargin: 10.0,
@@ -74,57 +65,87 @@ class _HomePageState extends State<HomePage> {
                 viewportFraction: 0.9,
               ),
               items: swipeList.map((i) {
-                return Text('');
+                return const Text('');
               }).toList(),
             ),
-            pageInfo(currentView),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                currentView == 3?Image.asset('assets/images/sound_image_1.png'):Container(),
+                Padding(padding: EdgeInsets.only(right: 10.0)),
+                pageInfo(currentView),
+
+              ],
+            ),
+            currentView == 2?Container(
+              height: 50.0,
+              width: 300.0,
+              margin: EdgeInsets.only(top: 25.0),
+              decoration: BoxDecoration(
+                // color: Colors.white,
+                borderRadius: BorderRadius.circular(10.0),
+                border: Border.all(color: Colors.white,width: 2.0),
+              ),
+              child: Row(
+                children: [
+                  TextField(
+                    decoration: InputDecoration(constraints: BoxConstraints(maxWidth: 200.0),
+                      // labelText: 'Pairing code',
+                      label: corousalText(text: 'Pairing code', fontFamily: currentfFont),
+                      // labelStyle: textStyle(currentfFont),
+                    ),
+                  ),
+
+                ],
+              ),
+
+            ):Container(),
+
           ],
-        ));
+        ),);
   }
 
-  Text pageInfo(int val) {
-    switch(val){
-      case 1: return Text('Lets get started',style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold),);
-      case 2: return Text('Pair the device using\npairing code or QR code',style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold),textAlign: TextAlign.center,);
-      case 3: return Text('Turn up the volume to max',style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold),);
-      case 4: return Text('Ensure the bystanders are\nat safe distance',style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold,),textAlign: TextAlign.center,);
-      case 5: return Text('Swipe to ready',style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold),);
-      default: return Text('Lets get started!',style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold),);
+  /*This function return the text to be printed below the main container page in the homepage, the text content
+  will be based on the currentpage view value.
+   */
+  Text pageInfo(int currentCorousal) {
+    switch(currentCorousal){
+      case 1: return corousalText(text:'Lets get started',fontFamily:currentfFont);
+      case 2: return corousalText(text: 'Pair the device using\npairing code or QR code',fontFamily:currentfFont);//,style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold),textAlign: TextAlign.center);
+      case 3: return corousalText(text: 'Turn up the volume to max',fontFamily:currentfFont);//,style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold));
+      case 4: return corousalText(text: 'Ensure the bystanders are\nat safe distance',fontFamily:currentfFont);//,style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold,),textAlign: TextAlign.center);
+      case 5: return corousalText(text: 'Swipe to ready',fontFamily:currentfFont);//,style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold));
+      default: return corousalText(text: 'Lets get started!',fontFamily:currentfFont);//,style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold));
     }
   }
 
-  Builder buildBuilder(int i) {
-    return Builder(
-      builder: (BuildContext context) {
-        return Container(
-          color: Colors.black,
-          child: AnimatedRotation(
-            turns: i / 4,
-            duration: const Duration(seconds: 1),
-            child: Image.asset("assets/images/group_1.png"),
-          ),
-        );
-      },
-    );
+  Text corousalText({required String text,required String fontFamily}) {
+    return Text(text, style: textStyle(fontFamily),textAlign: TextAlign.center,);
   }
 
-}
+  TextStyle textStyle(String fontFamily) {
+    return TextStyle(color: Colors.white,
+      fontFamily: fontFamily,
+      fontSize: 20.0,
+      fontWeight: FontWeight.w700);
+  }
 
-// width: MediaQuery.of(context).size.width,
-// margin: EdgeInsets.symmetric(horizontal: 5.0),
-// decoration: BoxDecoration(
-// color: Colors.amber
-// ),
-// child: Text('text $i', style: TextStyle(fontSize: 16.0),)
 
-// Center(
-// child: Stack(
-// alignment: Alignment.center,
-// children: [
-// Container(
-// child: Image.asset("assets/images/group_1.png"),
-// ),
-// Image.asset("assets/images/rocket_1.png"),
-// ],
-// ),
-// ),
+    /* this function is used for rotating a container in which it will be
+  rotated pos/4 for of its current position.
+   */
+    Builder rotatingContainer(int pos) {
+      return Builder(
+        builder: (BuildContext context) {
+          return Container(
+            color: Colors.black,
+            child: AnimatedRotation(
+              turns: pos / 4,
+              duration: const Duration(seconds: 2),
+              child: Image.asset("assets/images/group_1.png"),
+            ),
+          );
+        },
+      );
+    }
+  }

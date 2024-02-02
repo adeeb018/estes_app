@@ -71,7 +71,13 @@ flutter:
      - assets/images/estes_logo_2.png
      - assets/images/rocket_1.png
      - assets/images/group_1.png
+     - assets/images/sound_image_1.png
 
+  fonts:
+    - family: MuseoModerno
+      fonts:
+        - asset: assets/fonts/MuseoModerno-Regular.ttf
+        - asset: assets/fonts/MuseoModerno-SemiBoldItalic.ttf
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
