@@ -40,6 +40,7 @@ dependencies:
   get: ^4.6.6
   font_awesome_flutter: ^10.7.0
   flutter_carousel_widget: ^2.2.0
+  flutter_swipe_button: ^2.1.1+1
 
 
 
@@ -72,6 +73,7 @@ flutter:
      - assets/images/rocket_1.png
      - assets/images/group_1.png
      - assets/images/sound_image_1.png
+     - assets/images/swipe_image.png
 
   fonts:
     - family: MuseoModerno
