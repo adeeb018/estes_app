@@ -74,6 +74,7 @@ flutter:
      - assets/images/group_1.png
      - assets/images/sound_image_1.png
      - assets/images/swipe_image.png
+     - assets/images/launch_rocket.png
 
   fonts:
     - family: MuseoModerno

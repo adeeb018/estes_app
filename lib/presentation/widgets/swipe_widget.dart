@@ -1,17 +1,20 @@
+import 'package:estes_app/presentation/pages/launch_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_button/flutter_swipe_button.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class SwipeWidget extends StatelessWidget {
    SwipeWidget({
     super.key,
     required this.context,
-    required this.currentFont,
+    // required this.currentFont,
     required this.linearGradient,
     required this.swipeText,required this.onSwipe
   });
 
   final BuildContext context;
-  final String currentFont;
+  // final String currentFont;
   final Shader linearGradient;
   final String swipeText;
 
@@ -30,10 +33,14 @@ class SwipeWidget extends StatelessWidget {
       // activeThumbColor: const Color.fromARGB(41,85,218,111),
 
       height: 70.0,
-      onSwipeStart: (){
-
-      },
-      onSwipe: onSwipe,
+      onSwipe: (){
+        if(swipeText == 'Swipe to Ready') {
+          onSwipe!();
+        } else{
+          // route to launch screen
+          Get.to(() => const LaunchRocket());
+        }
+        },
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
         height: MediaQuery.of(context).size.width * 0.16,
@@ -46,7 +53,7 @@ class SwipeWidget extends StatelessWidget {
           child: Text(
             swipeText,
             style: TextStyle(
-              fontFamily: currentFont,
+              // fontFamily: currentFont,
               fontSize: 20.0,
               fontWeight: FontWeight.w700,
               foreground: Paint()..shader = linearGradient,

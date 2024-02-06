@@ -10,8 +10,10 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
       // toolbarHeight: 70.0,
-      backgroundColor: Colors.black,
+      // backgroundColor: Colors.black,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios_new_rounded),
         onPressed: () {},
