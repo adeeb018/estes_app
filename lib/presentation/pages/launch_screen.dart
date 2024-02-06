@@ -1,4 +1,4 @@
-import 'package:estes_app/presentation/widgets/appBar.dart';
+import 'package:estes_app/presentation/widgets/appbar_widget.dart';
 import 'package:estes_app/presentation/widgets/corousal_text_style.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +16,12 @@ class _LaunchRocketState extends State<LaunchRocket> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
-      appBar: AppBarWidget(),
+      appBar: AppBarWidget(
+        onpressed: (){
+          // Get.to(()=>SwipeToNext(getcurrentView: 5, getcurrentTheme: 1));
+          Navigator.of(context).pop();
+        },
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

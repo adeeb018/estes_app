@@ -1,23 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:estes_app/core/controllers/getx_controller.dart';
+import 'package:get/get.dart';
 class PageThemeOne extends StatelessWidget {
-  const PageThemeOne({super.key, required this.currentView});
+  PageThemeOne({super.key, required this.currentView});
 
+  StoreController storeController = Get.find<StoreController>();
   final int currentView;
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        _rotatingContainer(currentView),
-        Image.asset("assets/images/rocket_1.png"),
-      ],
-    );
+    return Obx(() {
+      if (storeController.currentTheme == 1) {
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            _rotatingContainer(currentView),
+            Image.asset("assets/images/rocket_1.png"),
+          ],
+        );
+      }
+      else if (storeController.currentTheme == 2) {
+        return SizedBox(
+          height: 300,
+          width: 300,
+        );
+      }
+      else {
+        return SizedBox();
+      }
+    });
+
   }
 
   Builder _rotatingContainer(int pos) {
     return Builder(
       builder: (BuildContext context) {
         return Container(
+          height: 300,
           color: Colors.black,
           child: AnimatedRotation(
             turns: pos / 4,

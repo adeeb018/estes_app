@@ -2,10 +2,9 @@ import 'package:estes_app/presentation/pages/launch_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class SwipeWidget extends StatelessWidget {
-   SwipeWidget({
+   const SwipeWidget({
     super.key,
     required this.context,
     // required this.currentFont,
@@ -18,7 +17,7 @@ class SwipeWidget extends StatelessWidget {
   final Shader linearGradient;
   final String swipeText;
 
-  void Function()? onSwipe;
+  final void Function()? onSwipe;
 
 
   @override
@@ -53,7 +52,6 @@ class SwipeWidget extends StatelessWidget {
           child: Text(
             swipeText,
             style: TextStyle(
-              // fontFamily: currentFont,
               fontSize: 20.0,
               fontWeight: FontWeight.w700,
               foreground: Paint()..shader = linearGradient,

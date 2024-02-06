@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 
+import 'core/controllers/getx_controller.dart';
+
 void main() {
   // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -20,7 +22,8 @@ class MyApp extends StatelessWidget {
         fontFamily: 'MuseoModerno'
       ),
       title: 'estes',
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
+

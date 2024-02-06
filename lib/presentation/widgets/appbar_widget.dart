@@ -1,10 +1,17 @@
+import 'package:estes_app/presentation/pages/settings_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{
+
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
-  const AppBarWidget({
+  void Function()? onpressed;
+
+  AppBarWidget({
     super.key,
+    required this.onpressed,
   });
 
   @override
@@ -16,7 +23,9 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{
       // backgroundColor: Colors.black,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios_new_rounded),
-        onPressed: () {},
+        onPressed: () {
+          onpressed!();
+        },
         color: Colors.white,
       ),
       titleSpacing: 0.0,
@@ -26,7 +35,9 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{
       ),
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.to(() => SettingsPage());
+          },
           icon: const Icon(Icons.settings),
           iconSize: 30.0,
           color: Colors.white,
