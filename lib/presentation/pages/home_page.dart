@@ -1,6 +1,16 @@
+import 'package:estes_app/presentation/pages/page_theme_1.dart';
+import 'package:estes_app/presentation/pages/swipe_page.dart';
+import 'package:estes_app/presentation/widgets/pairing_code.dart';
+import 'package:estes_app/presentation/widgets/swipe_widget.dart';
+import 'package:estes_app/presentation/widgets/volume_text_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:flutter_swipe_button/flutter_swipe_button.dart';
+import 'package:get/get.dart';
+
+import '../widgets/appBar.dart';
+import '../widgets/corousal_text_style.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,121 +20,195 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // double turns = 0.0;
-  List<int> swipeList = [1,2,3,4,5];
+  final CarouselController _carouselController = CarouselController();
+
+  final List<int> swipeList = [1, 2, 3, 4, 5, 6];
   int currentView = 1;
 
-  int previousView = 0;
+  // String currentFont = 'MuseoModerno';
+  int currentTheme = 1;
+
+  final Shader linearGradient = const LinearGradient(
+    colors: <Color>[Color(0xFF2A7DF9), Color(0xFFDEDFFC)],
+  ).createShader(const Rect.fromLTWH(50.0, 0.0, 200.0, 70.0));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          // toolbarHeight: 70.0,
-          backgroundColor: Colors.black,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded),
-            onPressed: () {},
-            color: Colors.white,
-          ),
-          titleSpacing: 0.0,
-          title: Image.asset(
-            "assets/images/estes_logo_2.png",
-            scale: 2.0,
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.settings),
-              iconSize: 30.0,
-              color: Colors.white,
-            )
-          ],
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                buildBuilder(currentView),
-                Image.asset("assets/images/rocket_1.png"),
-              ],
-            ),
-            FlutterCarousel(
-              options: CarouselOptions(
-                onPageChanged: (index,reason) {
-                  // if(currentView-1 == previousView || currentView < previousView){
-                  //   previousView = currentView;
-                  //   currentView--;
-                  // }else{
-                  //   currentView++;
-                  //   previousView++;
-                  // }
-                  currentView = index+1;
-
-                  setState(() {
-                    // currentView = 1;
-                  });
-                },
-                height: 50.0,
-                indicatorMargin: 10.0,
-                showIndicator: true,
-                slideIndicator: CircularWaveSlideIndicator(),
-                viewportFraction: 0.9,
-              ),
-              items: swipeList.map((i) {
-                return Text('');
-              }).toList(),
-            ),
-            pageInfo(currentView),
-          ],
-        ));
-  }
-
-  Text pageInfo(int val) {
-    switch(val){
-      case 1: return Text('Lets get started',style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold),);
-      case 2: return Text('Pair the device using\npairing code or QR code',style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold),textAlign: TextAlign.center,);
-      case 3: return Text('Turn up the volume to max',style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold),);
-      case 4: return Text('Ensure the bystanders are\nat safe distance',style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold,),textAlign: TextAlign.center,);
-      case 5: return Text('Swipe to ready',style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold),);
-      default: return Text('Lets get started!',style: TextStyle(color: Colors.white,fontFamily: 'MuseoModerno',fontSize: 22.0,fontWeight: FontWeight.bold),);
-    }
-  }
-
-  Builder buildBuilder(int i) {
-    return Builder(
-      builder: (BuildContext context) {
-        return Container(
-          color: Colors.black,
-          child: AnimatedRotation(
-            turns: i / 4,
-            duration: const Duration(seconds: 1),
-            child: Image.asset("assets/images/group_1.png"),
-          ),
-        );
-      },
+      backgroundColor: Colors.black,
+      appBar: const AppBarWidget(),
+      body: scaffoldBody(),
+      bottomNavigationBar: bottomNavigationBar(),
     );
   }
 
+  Center scaffoldBody() {
+    return Center(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (currentTheme == 1) PageThemeOne(currentView: currentView),
+            SizedBox(
+              height: 200,
+              child: ListView(
+                children: [
+                  FlutterCarousel(
+                    options: CarouselOptions(
+                      controller: _carouselController,
+                      onPageChanged: (index, reason) {
+                        currentView = index + 1;
+                        //setState is called to update the current page with respect to the current view
+                        setState(() {});
+                      },
+                      height: 50.0,
+                      indicatorMargin: 10.0,
+                      showIndicator: true,
+                      slideIndicator: CircularWaveSlideIndicator(),
+                      viewportFraction: 0.9,
+                    ),
+                    items: swipeList.map((i) {
+                      return const Text('');
+                    }).toList(),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (currentView == 3)
+                        VolumeToMax(currentTheme: currentTheme),
+                      const Padding(padding: EdgeInsets.only(right: 10.0)),
+                      pageInfo(currentView),
+                    ],
+                  ),
+                  if (currentView == 2) const PairingCode(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  SizedBox bottomNavigationBar() {
+    if (currentView == 5 || currentView == 6) {
+      return const SizedBox(
+        height: 50,
+      );
+    } else {
+      return SizedBox(
+        height: 50,
+        // color: Colors.blue,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          // crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            TextButton(
+              style: const ButtonStyle(alignment: Alignment.bottomRight),
+              onPressed: () {
+                _carouselController.nextPage();
+              },
+              child: const CorousalText(
+                  text: 'Next', color: Colors.white),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  /*This function return the text to be printed below the main container page in the homepage, the text content
+  will be based on the currentpage view value.
+   */
+  Widget pageInfo(int currentCorousal) {
+    switch (currentCorousal) {
+      case 1:
+        return const CorousalText(
+            text: 'Lets get started',
+            // fontFamily: currentFont,
+            color: Colors.white);
+      case 2:
+        return const CorousalText(
+            text: 'Pair the device using\npairing code or QR code',
+            // fontFamily: currentFont,
+            color: Colors.white);
+      case 3:
+        return const CorousalText(
+            text: 'Turn up the volume to max',
+            // fontFamily: currentFont,
+            color: Colors.white);
+      case 4:
+        return const CorousalText(
+            text: 'Ensure the bystanders are\nat safe distance',
+            // fontFamily: currentFont,
+            color: Colors.white);
+      case 5:
+        return Column(
+          children: [
+            const SizedBox(
+              height: 40.0,
+            ),
+            SwipeWidget(
+              context: context,
+              // currentFont: currentFont,
+              linearGradient: linearGradient,
+              swipeText: 'Swipe to Ready',
+              onSwipe: () {
+                _carouselController.nextPage();
+              },
+            ),
+          ],
+        );
+      case 6:
+        return Column(
+          children: [
+            const SizedBox(
+              height: 40.0,
+            ),
+            SwipeWidget(
+              context: context,
+              // currentFont: currentFont,
+              linearGradient: linearGradient,
+              swipeText: 'Swipe to ARM',
+              onSwipe: () {
+                _carouselController.nextPage();
+              },
+            ),
+          ],
+        );
+
+      // corousalText(text: 'Swipe to ready', fontFamily: currentFont);
+      default:
+        return const CorousalText(
+          text: 'Lets get started!',
+          // fontFamily: currentFont,
+          color: Colors.white,
+        );
+    }
+  }
+
+// Text corousalText({required String text, required String fontFamily}) {
+//   return Text(
+//     text,
+//     style: textStyle(fontFamily),
+//     textAlign: TextAlign.center,
+//   );
+// }
+//
+// TextStyle textStyle(String fontFamily) {
+//   return TextStyle(
+//       color: Colors.white,
+//       fontFamily: fontFamily,
+//       fontSize: 20.0,
+//       fontWeight: FontWeight.w700);
+// }
+
+// void nexToswipePage() {
+//   Get.to(() => SwipeToNext(getcurrentView: currentView, getcurrentTheme: currentTheme));
+// }
+
+/* this function is used for rotating a container in which it will be
+  rotated pos/4 for of its current position.
+   */
 }
-
-// width: MediaQuery.of(context).size.width,
-// margin: EdgeInsets.symmetric(horizontal: 5.0),
-// decoration: BoxDecoration(
-// color: Colors.amber
-// ),
-// child: Text('text $i', style: TextStyle(fontSize: 16.0),)
-
-// Center(
-// child: Stack(
-// alignment: Alignment.center,
-// children: [
-// Container(
-// child: Image.asset("assets/images/group_1.png"),
-// ),
-// Image.asset("assets/images/rocket_1.png"),
-// ],
-// ),
-// ),
