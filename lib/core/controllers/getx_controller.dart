@@ -11,7 +11,8 @@ class StoreController extends GetxController{
 
   // final String str = 'hello';
   var currentTheme = 1.obs;
-
+  // var currentView = 1.obs;
+  var currentBackground = 'second_screen';
 
 
 }

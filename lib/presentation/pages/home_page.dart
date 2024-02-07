@@ -1,4 +1,5 @@
 import 'package:estes_app/presentation/pages/page_theme_1.dart';
+import 'package:estes_app/presentation/widgets/backgroundImage_widget.dart';
 import 'package:estes_app/presentation/widgets/pairing_code.dart';
 import 'package:estes_app/presentation/widgets/swipe_widget.dart';
 import 'package:estes_app/presentation/widgets/volume_text_image.dart';
@@ -31,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       backgroundColor: Colors.black,
       appBar: AppBarWidget(onpressed: () {
         _carouselController.previousPage();
@@ -40,19 +42,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+
   Center scaffoldBody() {
     return Center(
       child: Stack(
         children: [
-          if(storeController.currentTheme != 1)
-            Container(
-            width: MediaQuery.of(context).size.width ,
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: backgroundImage()),
-            ),
-          ),
+          BackgroundLoad(context: context),
           Center(
             child: SingleChildScrollView(
               child: Column(
@@ -66,6 +61,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         FlutterCarousel(
                           options: CarouselOptions(
+                            physics: const NeverScrollableScrollPhysics(),
                             controller: _carouselController,
                             onPageChanged: (index, reason) {
                               currentView = index + 1;
@@ -93,15 +89,8 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ],
-      ),
+      )
     );
-  }
-
-  AssetImage backgroundImage() {
-    if(storeController.currentTheme == 2)
-      return AssetImage('assets/images/second_screen.png');
-    else
-      return AssetImage('');
   }
 
   Widget sliderComponent() {
@@ -110,7 +99,7 @@ class _HomePageState extends State<HomePage> {
         return pageInfo();
       case 2:
         return Column(
-          children: [pageInfo(), const PairingCode()],
+          children: [pageInfo(), PairingCode()],
         );
       case 3:
         return Padding(

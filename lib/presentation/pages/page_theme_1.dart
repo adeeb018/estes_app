@@ -20,13 +20,23 @@ class PageThemeOne extends StatelessWidget {
         );
       }
       else if (storeController.currentTheme == 2) {
-        return SizedBox(
+        return const SizedBox(
           height: 300,
           width: 300,
         );
       }
+      else if(storeController.currentTheme == 3){
+        return Container(
+          height: 300,
+          width: 300,
+          child: Image.asset('assets/images/astronaut_1.png'),
+        );
+      }
       else {
-        return SizedBox();
+        return const SizedBox(
+          height: 300,
+          width: 300,
+        );
       }
     });
 

@@ -1,5 +1,6 @@
 import 'package:estes_app/presentation/pages/launch_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'package:get/get.dart';
 
@@ -27,7 +28,7 @@ class SwipeWidget extends StatelessWidget {
       thumb: Image.asset('assets/images/swipe_image.png'),
       // activeThumbColor: Colors.blue,
       borderRadius: BorderRadius.circular(20),
-      activeTrackColor: Colors.black,
+      activeTrackColor: Colors.transparent,
       activeThumbColor: Colors.blue,
       // activeThumbColor: const Color.fromARGB(41,85,218,111),
 
@@ -57,6 +58,7 @@ class SwipeWidget extends StatelessWidget {
               foreground: Paint()..shader = linearGradient,
             ),
           ),
+              // .animate().slideX(duration: Duration(seconds: 2)),
         ),
       ),
     );

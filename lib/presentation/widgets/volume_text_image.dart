@@ -9,10 +9,17 @@ class VolumeToMax extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      if(storeController.currentTheme == 1) {
-        return Image.asset('assets/images/sound_image_1.png');
-      } else {
-        return const SizedBox();
-      }
+      return Obx((){
+        if(storeController.currentTheme == 1) {
+          return Image.asset('assets/images/sound_image_1.png');
+        } else if(storeController.currentTheme == 2){
+          return Image.asset('assets/images/sound_image_2.png');
+        } else if(storeController.currentTheme == 3){
+          return Image.asset('assets/images/sound_image_3.png');
+        }
+        else{
+          return const SizedBox();
+        }
+      });
   }
 }
