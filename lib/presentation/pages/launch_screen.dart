@@ -27,7 +27,7 @@ class _LaunchRocketState extends State<LaunchRocket> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset('assets/images/launch_rocket.png'),
-            const SizedBox(
+            SizedBox(
               height: 50,
               child: CorousalText(text: 'Hold on rocket\nfor 5 Seconds to launch',color: Colors.black),
             )

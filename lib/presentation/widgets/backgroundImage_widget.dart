@@ -5,7 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 
 class BackgroundLoad extends StatelessWidget {
 
-  StoreController storeController = Get.find<StoreController>();
+  final StoreController storeController = Get.find<StoreController>();
   final BuildContext context;
   BackgroundLoad({super.key,required this.context});
 

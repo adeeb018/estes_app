@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 class PageThemeOne extends StatelessWidget {
   PageThemeOne({super.key, required this.currentView});
 
-  StoreController storeController = Get.find<StoreController>();
+  final StoreController storeController = Get.find<StoreController>();
   final int currentView;
 
   @override

@@ -5,7 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 class VolumeToMax extends StatelessWidget {
   VolumeToMax({super.key});
 
-  StoreController storeController = Get.find<StoreController>();
+  final StoreController storeController = Get.find<StoreController>();
 
   @override
   Widget build(BuildContext context) {

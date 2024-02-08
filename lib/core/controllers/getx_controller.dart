@@ -14,5 +14,7 @@ class StoreController extends GetxController{
   // var currentView = 1.obs;
   var currentBackground = 'second_screen';
 
+  String currentFont = 'MuseoModerno'.obs as String;
+
 
 }

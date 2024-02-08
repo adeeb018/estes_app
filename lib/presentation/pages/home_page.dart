@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   int currentView = 1;
   // int currentTheme = 1;
 
-  StoreController storeController = Get.put(StoreController());
+  StoreController storeController = Get.find<StoreController>();
 
 
   @override
@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 _carouselController.nextPage();
               },
-              child: const CorousalText(text: 'Next', color: Colors.white),
+              child: CorousalText(text: 'Next', color: Colors.white),
             ),
           ],
         ),
@@ -156,22 +156,22 @@ class _HomePageState extends State<HomePage> {
   Widget pageInfo() {
     switch (currentView) {
       case 1:
-        return const CorousalText(
+        return CorousalText(
             text: 'Lets get started',
             // fontFamily: currentFont,
             color: Colors.white);
       case 2:
-        return const CorousalText(
+        return CorousalText(
             text: 'Pair the device using\npairing code or QR code',
             // fontFamily: currentFont,
             color: Colors.white);
       case 3:
-        return const CorousalText(
+        return CorousalText(
             text: 'Turn up the volume to max',
             // fontFamily: currentFont,
             color: Colors.white);
       case 4:
-        return const CorousalText(
+        return CorousalText(
             text: 'Ensure the bystanders are\nat safe distance',
             // fontFamily: currentFont,
             color: Colors.white);
@@ -181,7 +181,7 @@ class _HomePageState extends State<HomePage> {
         return swipeWidget('Swipe to ARM');
 
       default:
-        return const CorousalText(
+        return CorousalText(
           text: 'Some Error Occured',
           color: Colors.white,
         );

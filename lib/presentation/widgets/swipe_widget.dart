@@ -1,6 +1,5 @@
 import 'package:estes_app/presentation/pages/launch_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'package:get/get.dart';
 
