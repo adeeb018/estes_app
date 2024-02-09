@@ -24,74 +24,98 @@ class _HomePageState extends State<HomePage> {
   final List<int> swipeList = [1, 2, 3, 4, 5, 6];
 
   int currentView = 1;
+
   // int currentTheme = 1;
 
   StoreController storeController = Get.find<StoreController>();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       extendBody: true,
+      extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
-      appBar: AppBarWidget(onpressed: () {
-        _carouselController.previousPage();
-      }),
+      appBar: currentView != 1
+          ? AppBarWidget(onpressed: () {
+              _carouselController.previousPage();
+            })
+          : AppBarWidget(onpressed: () {
+              _carouselController.previousPage();
+            }, currentView: 1),
       body: scaffoldBody(),
       bottomNavigationBar: bottomNavigationBar(),
     );
   }
 
+  /*
+  the scaffoldBody is defined here as a stack to contain background image
+   */
 
-  Center scaffoldBody() {
-    return Center(
-      child: Stack(
-        children: [
-          BackgroundLoad(context: context),
-          Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  PageThemeOne(currentView: currentView),
-                  SizedBox(
-                    height: 220,
-                    child: ListView(
-                      children: [
-                        FlutterCarousel(
-                          options: CarouselOptions(
-                            physics: const NeverScrollableScrollPhysics(),
-                            controller: _carouselController,
-                            onPageChanged: (index, reason) {
-                              currentView = index + 1;
-                              //setState is called to update the current page with respect to the current view
-                              setState(() {});
-                            },
-                            height: 50.0,
-                            indicatorMargin: 10.0,
-                            showIndicator: true,
-                            slideIndicator: CircularWaveSlideIndicator(),
-                            viewportFraction: 0.9,
-                          ),
-                          items: swipeList.map((i) {
-                            return const Text('');
-                          }).toList(),
+  Stack scaffoldBody() {
+    return Stack(
+      children: [
+        BackgroundLoad(context: context),
+        Flex(
+          // mainAxisAlignment: MainAxisAlignment.center,
+          // crossAxisAlignment: CrossAxisAlignment.stretch,
+          direction: Axis.vertical,
+          children: [
+            Expanded(
+                flex: 7,
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Expanded(flex:12,child:PageThemeOne(currentView: currentView)),
+                    Expanded(
+                      flex: 1,
+                      child: FlutterCarousel(
+                        options: CarouselOptions(
+                          physics: const NeverScrollableScrollPhysics(),
+                          controller: _carouselController,
+                          onPageChanged: (index, reason) {
+                            currentView = index + 1;
+                            //setState is called to update the current page with respect to the current view
+                            setState(() {});
+                          },
+                          height: 50.0,
+                          indicatorMargin: 10.0,
+                          showIndicator: true,
+                          slideIndicator: CircularWaveSlideIndicator(),
+                          viewportFraction: 0.9,
                         ),
-                        Padding(padding: EdgeInsets.only(top: 10)),
-                        sliderComponent(),
-                        // if (currentView == 2) const PairingCode(),
-                      ],
+                        items: swipeList.map((i) {
+                          return const Text('');
+                        }).toList(),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+            ),
+            Expanded(
+              flex: 4,
+              child: Container(
+                // color: Colors.blue,
+                // height: 220,
+                child: Column(
+                  children: [
+                    Padding(padding: EdgeInsets.only(top: 10)),
+                    sliderComponent(),
+                    // if (currentView == 2) const PairingCode(),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      )
+          ],
+        ),
+      ],
     );
   }
+
+  /*
+  Each Corousal has different data components it is all defined here
+  with respect to the currentView of the slider.
+   */
 
   Widget sliderComponent() {
     switch (currentView) {
@@ -104,8 +128,10 @@ class _HomePageState extends State<HomePage> {
       case 3:
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            direction: Axis.horizontal,
+            // mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [VolumeToMax(), pageInfo()],
           ),
         );
@@ -166,10 +192,13 @@ class _HomePageState extends State<HomePage> {
             // fontFamily: currentFont,
             color: Colors.white);
       case 3:
-        return CorousalText(
-            text: 'Turn up the volume to max',
-            // fontFamily: currentFont,
-            color: Colors.white);
+        return Padding(
+          padding: const EdgeInsets.only(top: 10.0),
+          child: CorousalText(
+              text: 'Turn up the volume to max',
+              // fontFamily: currentFont,
+              color: Colors.white),
+        );
       case 4:
         return CorousalText(
             text: 'Ensure the bystanders are\nat safe distance',
@@ -188,6 +217,9 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  /*
+    this function is used to create a swipe widget and returns to the slider.
+   */
   Column swipeWidget(String text) {
     return Column(
       children: [

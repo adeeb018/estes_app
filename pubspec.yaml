@@ -80,6 +80,13 @@ flutter:
     - family: Khyay
       fonts:
         - asset: assets/fonts/Khyay-Regular.ttf
+    - family: Orbitron
+      fonts:
+        - asset: assets/fonts/Orbitron-Regular.ttf
+        - asset: assets/fonts/Orbitron-SemiBold.ttf
+    - family: AllertaStencil
+      fonts:
+        - asset: assets/fonts/AllertaStencil-Regular.ttf
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

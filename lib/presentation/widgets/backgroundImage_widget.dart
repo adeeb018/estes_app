@@ -31,6 +31,10 @@ class BackgroundLoad extends StatelessWidget {
       }
     });
   }
+
+  /*
+  background image will returned in a container with max width and height of device
+   */
   Container backgroundImageContainer() {
     return Container(
       constraints: const BoxConstraints.expand(),
@@ -38,7 +42,7 @@ class BackgroundLoad extends StatelessWidget {
       height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
         image: DecorationImage(
-          opacity: 0.65,
+          opacity: 0.8,
           image: backgroundImage(),
           fit: BoxFit.cover,
         ),
@@ -46,6 +50,9 @@ class BackgroundLoad extends StatelessWidget {
     );
   }
 
+  /*
+  background image is retrieved from getX controller which is setted with theme in settings.
+   */
   AssetImage backgroundImage() {
       return AssetImage('assets/images/${storeController.currentBackground}.png');
   }

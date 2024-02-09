@@ -8,15 +8,18 @@ class PageThemeOne extends StatelessWidget {
   final int currentView;
 
   @override
-  Widget build(BuildContext context) {
-    return Obx(() {
+  Widget build(BuildContext context) {//////////////////////////////////With repect the current Them different elements are returned from here on some instances
+    return Obx(() {                   /////////////////////////////////there is only a fixed sizedBox to fill out the portions in the mainpage.
       if (storeController.currentTheme == 1) {
-        return Stack(
-          alignment: Alignment.center,
-          children: [
-            _rotatingContainer(currentView),
-            Image.asset("assets/images/rocket_1.png"),
-          ],
+        return Container(
+          alignment: Alignment.bottomCenter,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              _rotatingContainer(currentView),
+              Image.asset("assets/images/rocket_1.png"),
+            ],
+          ),
         );
       }
       else if (storeController.currentTheme == 2) {
@@ -27,9 +30,10 @@ class PageThemeOne extends StatelessWidget {
       }
       else if(storeController.currentTheme == 3){
         return Container(
+          // color: Colors.red,
           height: 300,
-          width: 300,
-          child: Image.asset('assets/images/astronaut_1.png'),
+          width:MediaQuery.of(context).size.width,
+          child: Image.asset('assets/images/astronaut_1.png',alignment: Alignment.bottomCenter,),
         );
       }
       else {
@@ -42,6 +46,10 @@ class PageThemeOne extends StatelessWidget {
 
   }
 
+  /*
+  a rotating container is builder for first theme
+  this container rotated on changing the currentView in Corousal
+   */
   Builder _rotatingContainer(int pos) {
     return Builder(
       builder: (BuildContext context) {

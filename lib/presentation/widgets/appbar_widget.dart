@@ -1,3 +1,4 @@
+import 'package:estes_app/core/controllers/getx_controller.dart';
 import 'package:estes_app/presentation/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,8 +12,11 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{
 
   AppBarWidget({
     super.key,
-    required this.onpressed,
+    required this.onpressed, ////////////////onpressed is taken as function in constructor to call backbutton hete
+    this.currentView,
   });
+  int? currentView;
+  // StoreController storeController = Get.find<StoreController>();
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +25,13 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{
       elevation: 0,
       // toolbarHeight: 70.0,
       // backgroundColor: Colors.black,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new_rounded),
-        onPressed: () {
+      leading: currentView == null?IconButton(
+        icon: const Icon(Icons.arrow_back_ios_new_rounded), /////on the first page we don't need backbutton so if no currentView is returned from calling function
+        onPressed: () {                                     /////it will not have backbutton
           onpressed!();
         },
         color: Colors.white,
-      ),
+      ):SizedBox(),
       titleSpacing: 0.0,
       title: Image.asset(
         "assets/images/estes_logo_2.png",

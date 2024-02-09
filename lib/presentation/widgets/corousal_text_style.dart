@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CorousalText extends StatelessWidget {
-  CorousalText({super.key,required this.text,required this.color});
+  CorousalText({super.key,required this.text,required this.color,this.font});
 
   final StoreController storeController = Get.find<StoreController>();
   final String text;
   // final String fontFamily;
   final Color color;
+
+  String? font;
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (storeController.currentTheme.value != 0) {///problem persists..obx not working
+      if (storeController.currentFont.value != '') {
         return Text(
           text,
           style: textStyle(),
@@ -28,7 +30,7 @@ class CorousalText extends StatelessWidget {
   TextStyle textStyle() {
     return TextStyle(
         color: color,
-        fontFamily: storeController.currentFont,
+        fontFamily: font ?? storeController.currentFont.value,
         fontSize: 20.0,
         fontWeight: FontWeight.w700);
   }

@@ -38,20 +38,21 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBarWidget(
+      appBar: AppBarWidget( /////////////appbar widget is called and a function parameter is passed so that back functionality can be implemented
         onpressed: () {
           Navigator.of(context).pop();
         },
       ),
       body: Stack(
         children: [
+          // background image is loaded here with respect to the theme
           BackgroundLoad(context: context),
 
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 25.0),
+              const Padding(
+                padding: EdgeInsets.only(left: 25.0),
                 child: Text('Add a Background Image',style: TextStyle(color: Colors.white),),
               ),
               Expanded(
@@ -86,87 +87,42 @@ class _SettingsPageState extends State<SettingsPage> {
                         // mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           // Padding(padding: EdgeInsets.only(top: 0)),
-                          TextButton(onPressed: (){
-                            storeController.currentFont = 'MuseoModerno';
-                          }, child: CorousalText(text: 'Style 1', color: Colors.white)),
-                          TextButton(onPressed: (){
-                            storeController.currentFont = 'Khyay';
-                          }, child: CorousalText(text: 'Style 2', color: Colors.white)),
-                          TextButton(onPressed: (){}, child: CorousalText(text: 'Style 3', color: Colors.white)),
-                          TextButton(onPressed: (){}, child: CorousalText(text: 'Style 4', color: Colors.white)),
+                          styleButton('MuseoModerno','Style 1'),
+                          styleButton('Khyay','Style 2'),
+                          styleButton('Orbitron','Style 3'),
+                          styleButton('AllertaStencil','Style 4'),
                         ],
                       ),
                     ),
                   ),
                 ],
               ),
-
-
-
-
             ],
           ),
 
         ],
       ),
-      // body: Center(
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       Column(
-      //         mainAxisAlignment: MainAxisAlignment.center,
-      //         children: [
-      //           themeButton('', 1),
-      //           themeButton('second_screen', 2),
-      //         ],
-      //       ),
-      //       Column(
-      //         mainAxisAlignment: MainAxisAlignment.center,
-      //         children: [
-      //           themeButton('third_screen', 3),
-      //           themeButton('fourth_screen', 4),
-      //           // buildIconButton('', 1),
-      //           // buildIconButton('second_screen', 2),
-      //           // buildIconButton('third_screen', 3),
-      //           // buildIconButton('fourth_screen', 4),
-      //
-      //
-      //
-      //         ],
-      //       )
-      //     ],
-      //   ),
-      //
-      // ),
     );
   }
 
-  Ink buildIconButton(String imageName, int themeValue) {
-    return Ink(
-      decoration: const ShapeDecoration(shape: RoundedRectangleBorder()),
-      child: IconButton(
-        icon: imageName == ''
-            ? Text('')
-            : Image.asset(
-                'assets/images/${imageName}.png',
-                width: 100,
-                height: 100,
-              ),
-        iconSize: 50,
-        onPressed: () {
-          storeController.currentTheme.value = themeValue;
-          storeController.currentBackground = imageName;
-        },
-      ),
-    );
+  /*
+  this function return a button with text styles will be setted by the value in parameter
+   */
+  TextButton styleButton(String font, String styleText) {
+    return TextButton(onPressed: (){
+                          storeController.currentFont.value = font;
+                        }, child: CorousalText(text: styleText, color: Colors.white,font:font,));
   }
 
+  /*
+    this function return a widget which is a wallpaper button in settings to the gridview builder
+   */
   Widget themeButton(String imageName, int themeValue, int index) {
     return GestureDetector(
       onTap: () {
         storeController.currentTheme.value = themeValue;
-        storeController.currentBackground = imageName;
-        selectedContainer = index;
+        storeController.currentBackground = imageName;//////////////on clicking any themeButton in grid view the getXcontroller is updated with current theme,
+        selectedContainer = index;////////////////////////////////// background, and a selection variable is also changed to indicate it is selected.
         setState(() {});
       },
       child: Container(
@@ -174,7 +130,7 @@ class _SettingsPageState extends State<SettingsPage> {
           image: imageName != ''
               ? (index + 1 != imageNames.length
                   ? DecorationImage(
-                      image: AssetImage('assets/images/${imageName}.png'),
+                      image: AssetImage('assets/images/${imageName}.png'), /////////// for first page and last page there will be no images present
                       fit: BoxFit.fill)
                   : null)
               : null,
@@ -182,16 +138,19 @@ class _SettingsPageState extends State<SettingsPage> {
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           border: selectedContainer == index
               ? Border.all(
-                  color: Colors.pinkAccent, // Default border color
+                  color: Colors.pinkAccent, // border color on selection
                   width: 2.0,
                 )
-              : null,
+              : (index+1 == imageNames.length?Border.all(/////////////////selected container border should be pink and the final container border should be black
+            color: Colors.black, // border color on selection
+            width: 1.0,
+          ):null),
         ),
         child: imageName == ''
             ? (index + 1 == imageNames.length
                 ? const Center(
                     child: Icon(
-                    Icons.add_circle_outline_rounded,
+                    Icons.add_circle_outline_rounded, ///////////////// for the last container we add a '+' icon to its center.
                     color: Colors.white,
                     size: 50,
                   ))
@@ -201,14 +160,3 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
-
-// ElevatedButton(
-// style: ButtonStyle(
-// shape: MaterialStateProperty.all(const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-// ),
-// ),
-// onPressed: () {
-// storeController.currentTheme.value = themeValue;
-// storeController.currentBackground = imageName;
-// },
-// child:
