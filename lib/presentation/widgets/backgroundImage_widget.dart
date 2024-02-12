@@ -45,6 +45,10 @@ class BackgroundLoad extends StatelessWidget {
           opacity: 0.8,
           image: backgroundImage(),
           fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+            Colors.white.withOpacity(0.6),
+            BlendMode.dstATop,
+          ),
         ),
       ),
     );

@@ -22,13 +22,13 @@ class PageThemeOne extends StatelessWidget {
           ),
         );
       }
-      else if (storeController.currentTheme == 2) {
+      else if (storeController.currentTheme.value == 2) {
         return const SizedBox(
           height: 300,
           width: 300,
         );
       }
-      else if(storeController.currentTheme == 3){
+      else if(storeController.currentTheme.value == 3){
         return Container(
           // color: Colors.red,
           height: 300,

@@ -211,7 +211,7 @@ class _HomePageState extends State<HomePage> {
 
       default:
         return CorousalText(
-          text: 'Some Error Occured',
+          text: 'Some Error Occurred',
           color: Colors.white,
         );
     }
@@ -220,20 +220,21 @@ class _HomePageState extends State<HomePage> {
   /*
     this function is used to create a swipe widget and returns to the slider.
    */
-  Column swipeWidget(String text) {
+  Widget swipeWidget(String text) {
     return Column(
       children: [
         const SizedBox(
           height: 40.0,
         ),
-        SwipeWidget(
+        Obx(() => SwipeWidget(
           context: context,
           // currentFont: currentFont,
-          linearGradient: storeController.linearGradient,
+          linearGradient: storeController.currentTheme.value == 1?storeController.linearGradient:null,
           swipeText: text,
           onSwipe: () {
             _carouselController.nextPage();
           },
+        ),
         ),
       ],
     );
