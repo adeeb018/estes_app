@@ -37,6 +37,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
       appBar: AppBarWidget( /////////////appbar widget is called and a function parameter is passed so that back functionality can be implemented
         onpressed: () {
@@ -52,7 +53,7 @@ class _SettingsPageState extends State<SettingsPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Padding(
-                padding: EdgeInsets.only(left: 25.0),
+                padding: EdgeInsets.only(left: 25.0,top: 80),
                 child: Text('Add a Background Image',style: TextStyle(color: Colors.white),),
               ),
               Expanded(
@@ -74,10 +75,6 @@ class _SettingsPageState extends State<SettingsPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 25.0),
-                    child: Text('Select font',style: TextStyle(color: Colors.white),),
-                  ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 25.0),
                     child: SizedBox(
@@ -87,10 +84,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         // mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           // Padding(padding: EdgeInsets.only(top: 0)),
-                          styleButton('MuseoModerno','Style 1'),
-                          styleButton('Khyay','Style 2'),
-                          styleButton('Orbitron','Style 3'),
-                          styleButton('AllertaStencil','Style 4'),
+                          styleButton('MuseoModerno','Font 1'),
+                          styleButton('Khyay','Font 2'),
+                          styleButton('Orbitron','Font 3'),
+                          styleButton('AllertaStencil','Font 4'),
                         ],
                       ),
                     ),

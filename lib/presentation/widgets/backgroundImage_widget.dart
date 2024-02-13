@@ -13,7 +13,7 @@ class BackgroundLoad extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (storeController.currentTheme == 2) {
+      if (storeController.currentTheme.value == 2) {
         return Transform.scale(
           scaleY: 1.7,
           scaleX: 1.4,
@@ -21,10 +21,10 @@ class BackgroundLoad extends StatelessWidget {
           child: backgroundImageContainer(),
         );
       }
-      if (storeController.currentTheme == 3) {
+      if (storeController.currentTheme.value == 3) {
         return backgroundImageContainer();
       }
-      if (storeController.currentTheme == 4) {
+      if (storeController.currentTheme.value == 4) {
         return backgroundImageContainer();
       } else {
         return SizedBox();
