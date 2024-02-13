@@ -31,7 +31,7 @@ class CorousalText extends StatelessWidget {
     return TextStyle(
         color: color,
         fontFamily: font ?? storeController.currentFont.value,
-        fontSize: 20.0,
+        fontSize: 18.0,
         fontWeight: FontWeight.w700);
   }
 }

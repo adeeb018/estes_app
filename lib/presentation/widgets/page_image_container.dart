@@ -54,13 +54,16 @@ class PageImageContainer extends StatelessWidget {
                 image: DecorationImage(image: AssetImage('assets/images/success_image_stack_1.png'))
               ),
             ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 320,
-              decoration: const BoxDecoration(
-                // color: Colors.red,
-                image: DecorationImage(
-                  image: AssetImage('assets/images/success_image_stack_2.png'),),
+            Padding(
+              padding: const EdgeInsets.only(right: 50.0),
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 320,
+                decoration: const BoxDecoration(
+                  // color: Colors.red,
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/success_image_stack_2.png')),
+                ),
               ),
             ),
           ],

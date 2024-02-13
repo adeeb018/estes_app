@@ -1,4 +1,5 @@
 import 'package:estes_app/core/controllers/getx_controller.dart';
+import 'package:estes_app/presentation/pages/launch_screen.dart';
 import 'package:estes_app/presentation/widgets/appbar_widget.dart';
 import 'package:estes_app/presentation/widgets/backgroundImage_widget.dart';
 import 'package:estes_app/presentation/widgets/corousal_text_style.dart';
@@ -20,7 +21,7 @@ class AfterLaunch extends StatelessWidget {
       extendBody: true,
       backgroundColor: Colors.black,
       appBar: AppBarWidget(onpressed: (){
-        Navigator.of(context).pop();
+        Get.to(()=> LaunchRocket());
       }),
       body: Stack(
         children: [
@@ -29,7 +30,7 @@ class AfterLaunch extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
-              color: Color.fromRGBO(67, 67, 67, 0.7),
+              color: Color.fromRGBO(45, 45, 45, 0.82),
               // rgba(67, 67, 67, 1),
             ),
           ),),
@@ -37,8 +38,8 @@ class AfterLaunch extends StatelessWidget {
             child: Flex(
                 direction: Axis.vertical,
                 children:[
-                  Expanded(flex:5,child: Align(alignment:Alignment.bottomCenter,child: PageImageContainer(currentState: currentState,)),),
-                  Expanded(flex:3,child: Padding(
+                  Expanded(flex:10,child: Align(alignment:Alignment.bottomCenter,child: PageImageContainer(currentState: currentState,)),),
+                  Expanded(flex:5,child: Padding(
                     padding: const EdgeInsets.only(top: 20.0),
                     child: pageTextInfo(),
                   ),),
@@ -74,7 +75,10 @@ class AfterLaunch extends StatelessWidget {
       case 2: return CorousalText(text: 'We are facing some issue\nplease wait while we figure it out', color: Colors.white,);
       case 3: return CorousalText(text: 'Somethings not right\nplease stay away from rocket\nfor 60 seconds', color: Colors.white,);
       case 4: return CorousalText(text: 'There is something wrong', color: Colors.white,);
-      case 5: return CorousalText(text: 'You have successfully launched\nthe rocket ', color: Colors.white,);
+      case 5: return Padding(
+        padding: const EdgeInsets.only(left:4.0,right: 4.0),
+        child: CorousalText(text: 'You have successfully launched\nthe rocket ', color: Colors.white,),
+      );
       default: return CorousalText(text: 'Error', color: Colors.white,);
     }
   }

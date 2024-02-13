@@ -14,6 +14,7 @@ import 'package:estes_app/core/controllers/getx_controller.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  // final int? anyView;
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -201,7 +202,7 @@ class _HomePageState extends State<HomePage> {
         );
       case 4:
         return CorousalText(
-            text: 'Ensure the bystanders are\nat safe distance',
+            text: 'Ensure the bystanders\nare at safe distance',
             // fontFamily: currentFont,
             color: Colors.white);
       case 5:
