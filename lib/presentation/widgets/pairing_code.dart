@@ -1,19 +1,61 @@
+import 'dart:math';
+
 import 'package:estes_app/core/controllers/getx_controller.dart';
 import 'package:estes_app/presentation/widgets/corousal_text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class PairingCode extends StatelessWidget {
+class PairingCode extends StatefulWidget {
   PairingCode({super.key});
 
+  @override
+  State<PairingCode> createState() => _PairingCodeState();
+}
+
+class _PairingCodeState extends State<PairingCode> {
+
+  //focus node is used for getting to now that keyboard is present in the screen or not.
+  final FocusNode _focusNode = FocusNode();
+  bool isKeyboardVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _focusNode.addListener(() {
+      setState(() {
+        isKeyboardVisible = _focusNode.hasFocus;
+        print(isKeyboardVisible);
+        if(isKeyboardVisible == false) {
+          storeController.controller.reverse();
+          storeController.selectedPairingCode.value = false;
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   final StoreController storeController = Get.find<StoreController>();
+
   // final String currentFont;
   @override
   Widget build(BuildContext context) {
+
     return Obx(() => Container(
       width: MediaQuery.of(context).size.width * 0.95,
       padding: EdgeInsets.only(top: 20.0),
       child: TextField(
+          focusNode: _focusNode,
+          onTap: (){
+            // _animatedController.forward();
+            storeController.selectedPairingCode.value = true;
+            storeController.controller.forward();
+          },
           cursorColor: Colors.white,
           style: const TextStyle(
               color: Colors.white,

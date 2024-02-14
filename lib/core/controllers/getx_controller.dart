@@ -12,7 +12,10 @@ class StoreController extends GetxController{
   // final String str = 'hello';
   var currentTheme = 1.obs;
   // var currentView = 1.obs;
+  var selectedPairingCode = false.obs;
   var currentBackground = 'second_screen';
+
+  late AnimationController controller;
 
   var currentFont = 'MuseoModerno'.obs;
 

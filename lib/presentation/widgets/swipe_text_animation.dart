@@ -33,7 +33,7 @@ class TextAnimation extends State<SwipeTextAnimation> with TickerProviderStateMi
       end: 3.0, // Change end to 2.0 to ensure the second half of the animation
     ).animate(CurvedAnimation(
       parent: _controller,
-      curve: Interval(0, 1, curve: Curves.linear),
+      curve: Interval(0, 0.1, curve: Curves.linear),
     ));
 
     // Set the animation to repeat forever
