@@ -3,13 +3,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class CircleProgress extends CustomPainter{
-
-  final strokeCircle = 8.0;
+  
+  BuildContext context;
+  final strokeCircle = 6.0;
   double currentProgress;
-  CircleProgress(this.currentProgress);
-  @override
-
+  CircleProgress({required this.currentProgress,required this.context});
   late Color drawColor;
+
+  @override
   void paint(Canvas canvas, Size size) {
     double val = currentProgress/20.round();
 
@@ -25,11 +26,11 @@ class CircleProgress extends CustomPainter{
 
     Paint circle = Paint()
         ..strokeWidth = strokeCircle
-        ..color = Colors.grey
+        ..color = Colors.transparent
         ..style = PaintingStyle.stroke;
 
     Offset center = Offset((size.width/2), size.height/2);
-    double radius = 150;
+    double radius = MediaQuery.of(context).size.height/5;
     canvas.drawCircle(center, radius, circle);
     
     

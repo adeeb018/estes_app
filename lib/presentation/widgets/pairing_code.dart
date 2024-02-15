@@ -5,40 +5,8 @@ import 'package:estes_app/presentation/widgets/corousal_text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class PairingCode extends StatefulWidget {
+class PairingCode extends StatelessWidget {
   PairingCode({super.key});
-
-  @override
-  State<PairingCode> createState() => _PairingCodeState();
-}
-
-class _PairingCodeState extends State<PairingCode> {
-
-  //focus node is used for getting to now that keyboard is present in the screen or not.
-  final FocusNode _focusNode = FocusNode();
-  bool isKeyboardVisible = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _focusNode.addListener(() {
-      setState(() {
-        isKeyboardVisible = _focusNode.hasFocus;
-        print(isKeyboardVisible);
-        if(isKeyboardVisible == false) {
-          storeController.controller.reverse();
-          storeController.selectedPairingCode.value = false;
-        }
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
-  }
 
   final StoreController storeController = Get.find<StoreController>();
 
@@ -50,11 +18,7 @@ class _PairingCodeState extends State<PairingCode> {
       width: MediaQuery.of(context).size.width * 0.95,
       padding: EdgeInsets.only(top: 20.0),
       child: TextField(
-          focusNode: _focusNode,
           onTap: (){
-            // _animatedController.forward();
-            storeController.selectedPairingCode.value = true;
-            storeController.controller.forward();
           },
           cursorColor: Colors.white,
           style: const TextStyle(
@@ -89,23 +53,23 @@ class _PairingCodeState extends State<PairingCode> {
   OutlineInputBorder _pairingCodeBorderStyle() {
 
     if(storeController.currentTheme.value == 1){
-      return outlineInputBorder(15);
+      return _outlineInputBorder(15);
     }else if(storeController.currentTheme.value == 2){
-      return outlineInputBorder(10);
+      return _outlineInputBorder(10);
     }else if(storeController.currentTheme.value == 3){
-      return outlineInputBorder(0);
+      return _outlineInputBorder(0);
     }else if(storeController.currentTheme.value == 4){
-      return outlineInputBorder(5);
+      return _outlineInputBorder(5);
     }
     else{
-      return outlineInputBorder(0);
+      return _outlineInputBorder(0);
     }
   }
 
   /*
   border is returned white for 1st theme others are transperant
    */
-  OutlineInputBorder outlineInputBorder(double radius) {
+  OutlineInputBorder _outlineInputBorder(double radius) {
     return OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(radius)),
     borderSide: storeController.currentTheme.value == 1?BorderSide(color: Colors.white, width: 2.0):BorderSide(color: Colors.transparent),

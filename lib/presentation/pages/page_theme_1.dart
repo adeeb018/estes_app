@@ -1,60 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:estes_app/core/controllers/getx_controller.dart';
 import 'package:get/get.dart';
-class PageThemeOne extends StatefulWidget {
+
+
+class PageThemeOne extends StatelessWidget {
   PageThemeOne({super.key, required this.currentView});
 
   final int currentView;
-
-  @override
-  State<PageThemeOne> createState() => _PageThemeOneState();
-}
-
-class _PageThemeOneState extends State<PageThemeOne> with SingleTickerProviderStateMixin{
-  late AnimationController _animationController;
-
-  late Animation _animationRocket;
-  late Animation _animationContainer;
-
-
-  /*
-    An animation is given to the container on pressing the keyboard up.
-   */
-  @override
-  void initState() {
-    super.initState();
-
-    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 600));
-
-    _animationRocket = Tween<double>(begin: 200,end: 140).animate(_animationController);
-    _animationContainer = Tween<double>(begin: 300,end: 230).animate(_animationController);
-
-    storeController.controller = _animationController;
-  }
-
+  // BuildContext? mainContext;
 
   final StoreController storeController = Get.find<StoreController>();
 
   @override
   Widget build(BuildContext context) {
-                                      //////////////////////////////////With repect the current Them different elements are returned from here on some instances
+           // print(MediaQuery.of(mainContext!).size.height);                           //////////////////////////////////With repect the current Them different elements are returned from here on some instances
     return Obx(() {                   /////////////////////////////////there is only a fixed sizedBox to fill out the portions in the mainpage.
       if (storeController.currentTheme.value == 1) {
-        return AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) {
-            return Container(
-              height: MediaQuery.of(context).size.height/3,
-              alignment: Alignment.bottomCenter,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  _rotatingContainer(widget.currentView),
-                  Image.asset("assets/images/rocket_1.png",height: _animationRocket.value,),
-                ],
-              ),
-            );
-          }
+        return Container(
+          alignment: Alignment.bottomCenter,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              _rotatingContainer(currentView),
+              Image.asset("assets/images/rocket_1.png",),
+            ],
+          ),
         );
       }
       else if (storeController.currentTheme.value == 2) {
@@ -63,18 +33,13 @@ class _PageThemeOneState extends State<PageThemeOne> with SingleTickerProviderSt
         );
       }
       else if(storeController.currentTheme.value == 3){
-        return AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) {
-            return Container(
-              height: MediaQuery.of(context).size.height/3,
-              alignment: Alignment.bottomCenter,
-              // color: Colors.red,
-              // color: Colors.red,
-              // width: MediaQuery.of(context).size.width,
-              child: Image.asset('assets/images/astronaut_1.png',height: _animationContainer.value),
-            );
-          },
+        return Container(
+          // height: MediaQuery.of(context).size.height/3,
+          alignment: Alignment.bottomCenter,
+          // color: Colors.red,
+          // color: Colors.red,
+          // width: MediaQuery.of(context).size.width,
+          child: Image.asset('assets/images/astronaut_1.png'),
         );
       }
       else {
@@ -95,7 +60,6 @@ class _PageThemeOneState extends State<PageThemeOne> with SingleTickerProviderSt
     return Builder(
       builder: (BuildContext context) {
         return Container(
-          height: _animationContainer.value,
           color: Colors.black,
           child: AnimatedRotation(
             turns: pos / 4,

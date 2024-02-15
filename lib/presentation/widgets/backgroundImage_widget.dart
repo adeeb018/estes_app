@@ -42,7 +42,7 @@ class BackgroundLoad extends StatelessWidget {
       height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
         image: DecorationImage(
-          opacity: 0.8,
+          // opacity: 0.8,
           image: backgroundImage(),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(

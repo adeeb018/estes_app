@@ -57,57 +57,48 @@ class _HomePageState extends State<HomePage> {
     return Stack(
       children: [
         BackgroundLoad(context: context),
-        Flex(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          // crossAxisAlignment: CrossAxisAlignment.stretch,
-          direction: Axis.vertical,
-          children: [
-            Expanded(
-                flex: 7,
-                child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Expanded(flex:12,child:PageThemeOne(currentView: currentView)),
-                    Expanded(
-                      flex: 1,
-                      child: FlutterCarousel(
-                        options: CarouselOptions(
-                          physics: const NeverScrollableScrollPhysics(),
-                          controller: _carouselController,
-                          onPageChanged: (index, reason) {
-                            currentView = index + 1;
-                            //setState is called to update the current page with respect to the current view
-                            setState(() {});
-                          },
-                          height: 50.0,
-                          indicatorMargin: 10.0,
-                          showIndicator: true,
-                          slideIndicator: CircularWaveSlideIndicator(),
-                          viewportFraction: 0.9,
-                        ),
-                        items: swipeList.map((i) {
-                          return const Text('');
-                        }).toList(),
-                      ),
-                    ),
-                  ],
-                ),
-            ),
-            Expanded(
-              flex: 4,
-              child: Container(
-                // color: Colors.blue,
-                // height: 220,
-                child: Column(
-                  children: [
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    sliderComponent(),
-                    // if (currentView == 2) const PairingCode(),
-                  ],
+        SingleChildScrollView(
+          child: Column(
+            // mainAxisSize: MainAxisSize.min,
+            // mainAxisAlignment: MainAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
+            // direction: Axis.vertical,
+            children: [
+              Container(
+                  height: MediaQuery.of(context).size.height/2,
+                  child: PageThemeOne(currentView: currentView,)),
+              Container(
+                height: MediaQuery.of(context).size.height/15,
+                child: FlutterCarousel(
+                  options: CarouselOptions(
+                    physics: const NeverScrollableScrollPhysics(),
+                    controller: _carouselController,
+                    onPageChanged: (index, reason) {
+                      currentView = index + 1;
+                      //setState is called to update the current page with respect to the current view
+                      setState(() {});
+                    },
+                    height: 50.0,
+                    indicatorMargin: 10.0,
+                    showIndicator: true,
+                    slideIndicator: CircularWaveSlideIndicator(),
+                    viewportFraction: 0.9,
+                  ),
+                  items: swipeList.map((i) {
+                    return const Text('');
+                  }).toList(),
                 ),
               ),
-            ),
-          ],
+              Container(
+              // color: Colors.blue,
+              height: MediaQuery.of(context).size.height/3,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: sliderComponent(),
+              ),
+                                  ),
+            ],
+          ),
         ),
       ],
     );
@@ -188,10 +179,16 @@ class _HomePageState extends State<HomePage> {
             // fontFamily: currentFont,
             color: Colors.white);
       case 2:
-        return CorousalText(
-            text: 'Pair the device using\npairing code or QR code',
-            // fontFamily: currentFont,
-            color: Colors.white);
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 80.0),
+          child: Wrap(
+            direction: Axis.horizontal,
+            children: [CorousalText(
+                text: 'Pair the device using pairing code or QR code',
+                // fontFamily: currentFont,
+                color: Colors.white),
+          ],),
+        );
       case 3:
         return Padding(
           padding: const EdgeInsets.only(top: 10.0),
@@ -241,3 +238,49 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
+// Flex(
+// // mainAxisAlignment: MainAxisAlignment.center,
+// // crossAxisAlignment: CrossAxisAlignment.stretch,
+// direction: Axis.vertical,
+// children: [
+// Expanded(flex:7,child:PageThemeOne(currentView: currentView)),
+// Expanded(
+// flex: 1,
+// child: FlutterCarousel(
+// options: CarouselOptions(
+// physics: const NeverScrollableScrollPhysics(),
+// controller: _carouselController,
+// onPageChanged: (index, reason) {
+// currentView = index + 1;
+// //setState is called to update the current page with respect to the current view
+// setState(() {});
+// },
+// height: 50.0,
+// indicatorMargin: 10.0,
+// showIndicator: true,
+// slideIndicator: CircularWaveSlideIndicator(),
+// viewportFraction: 0.9,
+// ),
+// items: swipeList.map((i) {
+// return const Text('');
+// }).toList(),
+// ),
+// ),
+// Expanded(
+// flex: 4,
+// child: Container(
+// // color: Colors.blue,
+// // height: 220,
+// child: Column(
+// children: [
+// Padding(padding: EdgeInsets.only(top: 10)),
+// sliderComponent(),
+// // if (currentViSizedBoxew == 2) const PairingCode(),
+// ],
+// ),
+// ),
+// ),
+// ],
+// ),

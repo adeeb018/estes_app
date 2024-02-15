@@ -15,8 +15,6 @@ class StoreController extends GetxController{
   var selectedPairingCode = false.obs;
   var currentBackground = 'second_screen';
 
-  late AnimationController controller;
-
   var currentFont = 'MuseoModerno'.obs;
 
 
