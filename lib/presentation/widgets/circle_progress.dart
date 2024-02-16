@@ -30,7 +30,7 @@ class CircleProgress extends CustomPainter{
         ..style = PaintingStyle.stroke;
 
     Offset center = Offset((size.width/2), size.height/2);
-    double radius = MediaQuery.of(context).size.height/5;
+    double radius = MediaQuery.of(context).size.height/6;
     canvas.drawCircle(center, radius, circle);
     
     

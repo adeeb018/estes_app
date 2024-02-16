@@ -16,6 +16,7 @@ class TextAnimation extends State<SwipeTextAnimation> with TickerProviderStateMi
   StoreController storeController = Get.find<StoreController>();
   late AnimationController _controller;
   late Animation<double> _positionAnimation;
+  late Animation _secondPositionAnimation;
 
   @override
   void initState() {
@@ -23,22 +24,46 @@ class TextAnimation extends State<SwipeTextAnimation> with TickerProviderStateMi
 
     // Initialize the animation controller
     _controller = AnimationController(
-      duration: Duration(seconds: 3),
+      duration: Duration(milliseconds: 2000),
       vsync: this,
     );
+
+
+    _secondPositionAnimation = TweenSequence(<TweenSequenceItem>[
+      TweenSequenceItem(
+      tween: ColorTween(begin: Colors.blue[50],end: Colors.blue[700]),
+      weight: 99,
+    ),
+      TweenSequenceItem(
+        tween: ColorTween(begin: Colors.blue[700],end: Colors.white),
+        weight: 1,
+
+      ),
+    ]).animate(CurvedAnimation(
+        parent: _controller,
+        curve: Interval(0, 1, curve: Curves.linear),
+      ));
 
     // Initialize the position animation
     _positionAnimation = Tween<double>(
       begin: 0.0,
-      end: 3.0, // Change end to 2.0 to ensure the second half of the animation
+      end: 2.0, // Change end to 2.0 to ensure the second half of the animation
     ).animate(CurvedAnimation(
       parent: _controller,
-      curve: Interval(0, 0.1, curve: Curves.linear),
+      curve: Interval(0, 1, curve: Curves.easeInQuart),
     ));
 
+    // _controller.addStatusListener((status) {
+    //   print(status);
+    // });
+    // _secondPositionAnimation = ColorTween(begin: Colors.white,end: Colors.blue).animate(CurvedAnimation(
+    //   parent: _controller,
+    //   curve: Interval(0, 1, curve: Curves.linear),
+    // ));
     // Set the animation to repeat forever
-    _controller.repeat();
-
+    // _controller.repeat();
+    //   _controller.forward();
+      _controller.repeat();
     // Uncomment the line below to play the animation only once
     // _controller.forward();
   }
@@ -60,14 +85,13 @@ class TextAnimation extends State<SwipeTextAnimation> with TickerProviderStateMi
           return ShaderMask(
             shaderCallback: (Rect bounds) {
               return LinearGradient(
-                colors: [Colors.blue, Colors.white, Colors.blue],
+                colors: [_secondPositionAnimation.value,Colors.white],
                 stops: [
                   _positionAnimation.value,
-                  _positionAnimation.value,
-                  1.0, // Ensure white at the end
+                  _positionAnimation.value, // Ensure white at the end
                 ],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
+                begin: Alignment.topLeft,
+                end: Alignment.topRight,
               ).createShader(bounds);
             },
             child: Padding(

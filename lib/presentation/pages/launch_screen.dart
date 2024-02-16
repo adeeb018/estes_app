@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:estes_app/presentation/widgets/backgroundImage_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:vibration/vibration.dart';
 import '../widgets/appbar_widget.dart';
 import '../widgets/circle_progress.dart';
@@ -16,12 +17,15 @@ class LaunchRocket extends StatefulWidget {
 }
 
 class _LaunchRocketState extends State<LaunchRocket>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
+
   bool isLaunchTimeVisible = false;
   bool isVibrating = false;
   int buttonHeldPosition = 0;
   late AnimationController _animationController;
   late Animation<double> _animation;
+
+  late AnimationController _rocketAnimationController;
 
   @override
   void initState() {
@@ -38,6 +42,9 @@ class _LaunchRocketState extends State<LaunchRocket>
       vsync: this,
       duration: const Duration(milliseconds: 5000),
     );
+
+    _rocketAnimationController = AnimationController(vsync: this,duration: Duration(milliseconds: 5000),);
+
 
     _animation = Tween<double>(begin: 0, end: 100).animate(_animationController)
       ..addListener(() {
@@ -114,6 +121,9 @@ the status listener listen for values forward,completed,reverse and dismissed
     _animationController.dispose();
     _animation.removeListener(() {});
     _animationController.removeStatusListener(_animationStatusListener);
+
+
+    _rocketAnimationController.dispose();
   }
 
   int _launchTime(){
@@ -155,34 +165,42 @@ the status listener listen for values forward,completed,reverse and dismissed
                         onLongPressStart: (e) {
                           isLaunchTimeVisible = true;
                           _animationController.forward();
+                          _rocketAnimationController.repeat();
                         },
                         onLongPressUp: () {
                           isLaunchTimeVisible = false;
                           _animationController.reverse();
+                          _rocketAnimationController.reverse();
                         },
                         child: SizedBox(
                           height: MediaQuery.of(context).size.height/2.5,
                           child: Padding(
                             padding: const EdgeInsets.only(top: 20.0),
-                            child: Image.asset('assets/images/launch_rocket.png'),
+                            child: Lottie.asset('assets/animations/rocket_animation.json',controller: _rocketAnimationController)
+                            //Image.asset('assets/images/launch_rocket.png'),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-                isLaunchTimeVisible?Text(
-                  '${_launchTime()}',
-                  style: const TextStyle(color: Colors.white),
-                ):const SizedBox(),
                 Expanded(
                   flex: 6,
-                  child: Container(
-                    alignment: Alignment.topCenter,
-                    height: 50,
-                    child: CorousalText(
-                        text: 'Hold on rocket\nfor 5 Seconds to launch',
-                        color: Colors.white),
+                  child: Column(
+                    children: [
+                    isLaunchTimeVisible?Text(
+                    '${_launchTime()}',
+                          style: const TextStyle(color: Colors.white),
+                      )
+                      :const SizedBox(),
+                      Container(
+                        alignment: Alignment.topCenter,
+                        height: 50,
+                        child: CorousalText(
+                            text: 'Hold on rocket\nfor 5 Seconds to launch',
+                            color: Colors.white),
+                      ),
+                    ],
                   ),
                 )
               ],
