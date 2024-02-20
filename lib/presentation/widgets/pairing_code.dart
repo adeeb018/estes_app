@@ -2,13 +2,22 @@ import 'dart:math';
 
 import 'package:estes_app/core/controllers/getx_controller.dart';
 import 'package:estes_app/presentation/widgets/corousal_text_style.dart';
+import 'package:estes_app/presentation/widgets/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class PairingCode extends StatelessWidget {
+
+class PairingCode extends StatefulWidget {
   PairingCode({super.key});
 
+  @override
+  State<PairingCode> createState() => _PairingCodeState();
+}
+
+class _PairingCodeState extends State<PairingCode> {
   final StoreController storeController = Get.find<StoreController>();
+  final TextEditingController textController = TextEditingController();
+
 
   // final String currentFont;
   @override
@@ -18,6 +27,8 @@ class PairingCode extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.95,
       padding: EdgeInsets.only(top: 20.0),
       child: TextField(
+          controller: textController,
+          keyboardType: TextInputType.number,
           onTap: (){
           },
           cursorColor: Colors.white,
@@ -31,12 +42,18 @@ class PairingCode extends StatelessWidget {
               fillColor: storeController.currentTheme.value == 2?Color.fromRGBO(0, 0, 0, 0.7):Color.fromRGBO(0, 0, 0, 0.4),
               enabledBorder: _pairingCodeBorderStyle(),
               focusedBorder: _pairingCodeBorderStyle(),
-              suffixIcon: const Padding(
-                padding: EdgeInsets.only(right: 5.0),
-                child: Icon(
-                  Icons.qr_code_2_rounded,
-                  color: Colors.white,
-                  size: 50.0,
+              suffixIcon: Padding(
+                padding: const EdgeInsets.only(right: 5.0),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.qr_code_2_rounded,
+                    color: Colors.white,
+                    size: 50.0,
+                  ),
+                  onPressed: () {
+                    // print('hello');
+                    // Get.to(() => QrScreen());
+                  },
                 ),
               ),
               hintText: 'Pairing code',
@@ -45,6 +62,7 @@ class PairingCode extends StatelessWidget {
     )
     );
   }
+
 
   /*
   for different theme it have different border radius for pairing code

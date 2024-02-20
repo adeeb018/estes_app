@@ -7,6 +7,7 @@ import 'package:vibration/vibration.dart';
 import '../widgets/appbar_widget.dart';
 import '../widgets/circle_progress.dart';
 import '../widgets/corousal_text_style.dart';
+import '../widgets/load_rocket_animation.dart';
 import 'after_launch_screen.dart';
 
 class LaunchRocket extends StatefulWidget {
@@ -173,12 +174,8 @@ the status listener listen for values forward,completed,reverse and dismissed
                           _rocketAnimationController.reverse();
                         },
                         child: SizedBox(
-                          height: MediaQuery.of(context).size.height/2.5,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: Lottie.asset('assets/animations/rocket_animation.json',controller: _rocketAnimationController)
-                            //Image.asset('assets/images/launch_rocket.png'),
-                          ),
+                          height: MediaQuery.of(context).size.height/3,
+                          child: Center(child: LoadRocketLaunchAnimation(rocketAnimationController: _rocketAnimationController)),
                         ),
                       ),
                     ),
@@ -211,3 +208,5 @@ the status listener listen for values forward,completed,reverse and dismissed
     );
   }
 }
+
+
