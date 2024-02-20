@@ -22,6 +22,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final CarouselController _carouselController = CarouselController();
 
+  final MaterialStatesController textStatesController = MaterialStatesController();
+
+
   final List<int> swipeList = [1, 2, 3, 4, 5, 6];
 
   int currentView = 1;
@@ -29,6 +32,15 @@ class _HomePageState extends State<HomePage> {
   // int currentTheme = 1;
 
   StoreController storeController = Get.find<StoreController>();
+
+  bool _isPairingCodeOk(){
+    if(storeController.paringTextController.value.text == '123456') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -156,10 +168,17 @@ class _HomePageState extends State<HomePage> {
           // crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             TextButton(
+              statesController: textStatesController,
               style: const ButtonStyle(alignment: Alignment.bottomRight),
-              onPressed: () {
+              onPressed: currentView == 2?() {
+                if(_isPairingCodeOk()){
+                  _carouselController.nextPage();
+                }else{
+                  return;
+                }
+              }:(){
                 _carouselController.nextPage();
-              },
+                },
               child: CorousalText(text: 'Next', color: Colors.white),
             ),
           ],

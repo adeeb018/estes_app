@@ -1,6 +1,7 @@
 import 'package:estes_app/core/controllers/getx_controller.dart';
 import 'package:estes_app/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 void main() {
@@ -17,10 +18,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: true,
       title: 'estes',
       home: HomePage(),
+      builder: EasyLoading.init(),
     );
   }
 }

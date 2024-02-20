@@ -17,5 +17,7 @@ class StoreController extends GetxController{
 
   var currentFont = 'MuseoModerno'.obs;
 
+  var paringTextController = TextEditingController().obs;
+
 
 }

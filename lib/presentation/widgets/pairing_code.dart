@@ -1,14 +1,18 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:estes_app/core/controllers/getx_controller.dart';
 import 'package:estes_app/presentation/widgets/corousal_text_style.dart';
+import 'package:estes_app/presentation/widgets/loading_widget.dart';
 import 'package:estes_app/presentation/widgets/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
+import 'package:qr_mobile_vision/qr_camera.dart';
 
 
 class PairingCode extends StatefulWidget {
-  PairingCode({super.key});
+  const PairingCode({super.key});
 
   @override
   State<PairingCode> createState() => _PairingCodeState();
@@ -16,7 +20,10 @@ class PairingCode extends StatefulWidget {
 
 class _PairingCodeState extends State<PairingCode> {
   final StoreController storeController = Get.find<StoreController>();
-  final TextEditingController textController = TextEditingController();
+
+  // final TextEditingController textController = TextEditingController();
+
+  // String? result;
 
 
   // final String currentFont;
@@ -27,7 +34,7 @@ class _PairingCodeState extends State<PairingCode> {
       width: MediaQuery.of(context).size.width * 0.95,
       padding: EdgeInsets.only(top: 20.0),
       child: TextField(
-          controller: textController,
+          controller: storeController.paringTextController.value,
           keyboardType: TextInputType.number,
           onTap: (){
           },
@@ -51,8 +58,26 @@ class _PairingCodeState extends State<PairingCode> {
                     size: 50.0,
                   ),
                   onPressed: () {
-                    // print('hello');
-                    // Get.to(() => QrScreen());
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => QrCamera(
+                          notStartedBuilder: (context){
+                            return const LoadingAnimation();
+                          },
+                          onError: (context, error) => Text(
+                            error.toString(),
+                            style: TextStyle(color: Colors.red),
+                          ),
+                          qrCodeCallback: (code) {
+                            setState(() {
+                              storeController.paringTextController.value.text = code!;
+                            });
+                            Navigator.popUntil(context, ModalRoute.withName('/'));
+                          },
+                        ),
+                      ),
+                    );
                   },
                 ),
               ),
