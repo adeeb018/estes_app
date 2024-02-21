@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: true,
       title: 'estes',
       home: HomePage(),
-      builder: EasyLoading.init(),
+      // builder: EasyLoading.init(),
     );
   }
 }

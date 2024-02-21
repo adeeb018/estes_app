@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:estes_app/core/controllers/getx_controller.dart';
 import 'package:estes_app/presentation/widgets/corousal_text_style.dart';
-import 'package:estes_app/presentation/widgets/loading_widget.dart';
+import 'package:estes_app/presentation/widgets/qr_scan_widget.dart';
 import 'package:estes_app/presentation/widgets/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -61,21 +61,9 @@ class _PairingCodeState extends State<PairingCode> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => QrCamera(
-                          notStartedBuilder: (context){
-                            return const LoadingAnimation();
-                          },
-                          onError: (context, error) => Text(
-                            error.toString(),
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          qrCodeCallback: (code) {
-                            setState(() {
-                              storeController.paringTextController.value.text = code!;
-                            });
-                            Navigator.popUntil(context, ModalRoute.withName('/'));
-                          },
-                        ),
+                        builder: (context) {
+                          return QrScreen();
+                      }
                       ),
                     );
                   },

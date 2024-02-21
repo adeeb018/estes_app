@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:estes_app/presentation/pages/page_theme_1.dart';
 import 'package:estes_app/presentation/widgets/backgroundImage_widget.dart';
+import 'package:estes_app/presentation/widgets/bluetooth_connection.dart';
 import 'package:estes_app/presentation/widgets/pairing_code.dart';
 import 'package:estes_app/presentation/widgets/swipe_widget.dart';
 import 'package:estes_app/presentation/widgets/volume_text_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -33,8 +37,22 @@ class _HomePageState extends State<HomePage> {
 
   StoreController storeController = Get.find<StoreController>();
 
+  BluetoothScreen bluetoothScreen = BluetoothScreen();
+
+  @override
+  void initState(){
+    super.initState();
+    bluetoothScreen.scan();
+  }
+
   bool _isPairingCodeOk(){
-    if(storeController.paringTextController.value.text == '123456') {
+    String pairingCode = storeController.paringTextController.value.text;
+    if(pairingCode.length == 6) {
+      for(int i=0;i<pairingCode.length;i++){
+        if(pairingCode[i].isAlphabetOnly){
+          return false;
+        }
+      }
       return true;
     } else {
       return false;
@@ -52,7 +70,7 @@ class _HomePageState extends State<HomePage> {
       appBar: currentView != 1
           ? AppBarWidget(onpressed: () {
               _carouselController.previousPage();
-            })
+            },bluetoothScreen: bluetoothScreen,currentView: currentView,)
           : AppBarWidget(onpressed: () {
               _carouselController.previousPage();
             }, currentView: 1),
@@ -170,20 +188,35 @@ class _HomePageState extends State<HomePage> {
             TextButton(
               statesController: textStatesController,
               style: const ButtonStyle(alignment: Alignment.bottomRight),
-              onPressed: currentView == 2?() {
-                if(_isPairingCodeOk()){
-                  _carouselController.nextPage();
-                }else{
-                  return;
-                }
-              }:(){
-                _carouselController.nextPage();
-                },
+              onPressed: _nextPageConstraintsCheck,
               child: CorousalText(text: 'Next', color: Colors.white),
             ),
           ],
         ),
       );
+    }
+  }
+
+  Future<void> _nextPageConstraintsCheck() async {
+
+    if(currentView == 1){
+      _carouselController.nextPage();
+    }
+
+    if(currentView == 2){
+      if(_isPairingCodeOk()){
+        if(await bluetoothScreen.connect()) {
+          _carouselController.nextPage();
+        }
+        else{
+          return;
+        }
+      }else{
+        return;
+      }
+    }
+    else{
+      _carouselController.nextPage();
     }
   }
 
@@ -257,49 +290,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
-// Flex(
-// // mainAxisAlignment: MainAxisAlignment.center,
-// // crossAxisAlignment: CrossAxisAlignment.stretch,
-// direction: Axis.vertical,
-// children: [
-// Expanded(flex:7,child:PageThemeOne(currentView: currentView)),
-// Expanded(
-// flex: 1,
-// child: FlutterCarousel(
-// options: CarouselOptions(
-// physics: const NeverScrollableScrollPhysics(),
-// controller: _carouselController,
-// onPageChanged: (index, reason) {
-// currentView = index + 1;
-// //setState is called to update the current page with respect to the current view
-// setState(() {});
-// },
-// height: 50.0,
-// indicatorMargin: 10.0,
-// showIndicator: true,
-// slideIndicator: CircularWaveSlideIndicator(),
-// viewportFraction: 0.9,
-// ),
-// items: swipeList.map((i) {
-// return const Text('');
-// }).toList(),
-// ),
-// ),
-// Expanded(
-// flex: 4,
-// child: Container(
-// // color: Colors.blue,
-// // height: 220,
-// child: Column(
-// children: [
-// Padding(padding: EdgeInsets.only(top: 10)),
-// sliderComponent(),
-// // if (currentViSizedBoxew == 2) const PairingCode(),
-// ],
-// ),
-// ),
-// ),
-// ],
-// ),
