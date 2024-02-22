@@ -118,13 +118,11 @@ the status listener listen for values forward,completed,reverse and dismissed
 
   @override
   void dispose() {
-    super.dispose();
     _animationController.dispose();
     _animation.removeListener(() {});
     _animationController.removeStatusListener(_animationStatusListener);
-
-
     _rocketAnimationController.dispose();
+    super.dispose();
   }
 
   int _launchTime(){

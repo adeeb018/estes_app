@@ -14,12 +14,15 @@ class BluetoothScreen {
           log("BLE APP result is there");
           ScanResult r = results.last; // the most recently found device
           if (r.advertisementData.advName == "DSD TECH") {
-            this.deviceToConnect = r;
+            deviceToConnect = r;
+            log('${r.device.remoteId}: "${r.advertisementData.advName}" found!');
           }
-          print('${r.device.remoteId}: "${r.advertisementData.advName}" found!');
+
         }
       },
-      onError: (e) => print(e));
+      onError: (e) => log(e));
+
+    FlutterBluePlus.cancelWhenScanComplete(subscription);
   }
 
 
@@ -29,7 +32,8 @@ class BluetoothScreen {
         .where((val) => val == BluetoothAdapterState.on)
         .first;
 
-    await FlutterBluePlus.startScan(timeout: const Duration(seconds: 5));
+    await FlutterBluePlus.startScan(timeout: const Duration(seconds: 5), withServices:[Guid("180D")],
+      withNames:["DSD TECH"]);
 
     await FlutterBluePlus.isScanning.where((val) => val == false).first;
     _isButtonDisabled = true;
@@ -37,16 +41,18 @@ class BluetoothScreen {
 
   Future<bool> connect() async {
     if (deviceToConnect != null) {
-      await deviceToConnect?.device.connect();
+      deviceToConnect?.device.connect();
       if(deviceToConnect!.device.isConnected){
         return true;
       }
       else{
+        log('BLE APP not connected try again');
         return false;
       }
       // Navigator.of(context).push(_createRoute());
     }
     else{
+      log('BLE APP not connected try again');
       return false;
     }
   }
@@ -56,5 +62,23 @@ class BluetoothScreen {
     await deviceToConnect?.device.disconnect();
     // device.disconnect();
     _isButtonDisabled = false;
+    log("BLE APP Disconnected");
+  }
+
+  Future<void> buttonAction(List<int> writeList) async {
+    List<BluetoothService>? services =
+    await deviceToConnect?.device.discoverServices();
+    services?.forEach((service) async {
+      // do something with service
+      // Reads all characteristics
+      var characteristics = service.characteristics;
+      for (BluetoothCharacteristic c in characteristics) {
+        // Writes to a characteristic
+        // print(characteristics);
+        if(characteristics[0].serviceUuid.str == 'ffe0'){
+          await c.write(writeList);
+        }
+      }
+    });
   }
 }

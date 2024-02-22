@@ -9,6 +9,7 @@ import 'package:estes_app/presentation/widgets/volume_text_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import '../widgets/appbar_widget.dart';
@@ -203,21 +204,44 @@ class _HomePageState extends State<HomePage> {
       _carouselController.nextPage();
     }
 
-    if(currentView == 2){
+    else if(currentView == 2){
+      const snackBar = SnackBar(
+        content: Text('Try again!!Not Connected'),
+      );
       if(_isPairingCodeOk()){
         if(await bluetoothScreen.connect()) {
           _carouselController.nextPage();
+          await bluetoothScreen.buttonAction([0xA0, 0x01, 0x01, 0xA2]);
         }
-        else{
+        else if(context.mounted){
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
           return;
         }
       }else{
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
         return;
+      }
+    }
+    else if(currentView == 3){
+      const snackBar = SnackBar(
+        content: Text('Please set Device volume to MAX and Try again..'),
+      );
+      final volume = await FlutterVolumeController.getVolume();
+      if(volume == 1.0){
+        _carouselController.nextPage();
+      }
+      else if(context.mounted){
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
     else{
       _carouselController.nextPage();
     }
+  }
+
+  Future<void> volumeCheck() async {
+    final volume = await FlutterVolumeController.getVolume();
+    log("CURRENT VOLUME IS $volume");
   }
 
   /*This function return the text to be printed below the main container page in the homepage, the text content
