@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class PageImageContainer extends StatelessWidget {
   const PageImageContainer({super.key,required this.currentState});
 
+
   final int currentState;
   @override
   Widget build(BuildContext context) {
@@ -50,7 +51,7 @@ class PageImageContainer extends StatelessWidget {
             Container(
               width: MediaQuery.of(context).size.width,
               height: 280,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(image: AssetImage('assets/images/success_image_stack_1.png'))
               ),
             ),

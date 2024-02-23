@@ -1,15 +1,13 @@
 import 'package:estes_app/core/controllers/getx_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class BackgroundLoad extends StatelessWidget {
+  BackgroundLoad({super.key,required this.context});
 
   final StoreController storeController = Get.find<StoreController>();
   final BuildContext context;
-  BackgroundLoad({super.key,required this.context});
 
-  // final Rx<int> currentTheme;
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -18,16 +16,16 @@ class BackgroundLoad extends StatelessWidget {
           scaleY: 1.7,
           scaleX: 1.4,
           // scale: 1.0,
-          child: backgroundImageContainer(),
+          child: _backgroundImageContainer(),
         );
       }
       if (storeController.currentTheme.value == 3) {
-        return backgroundImageContainer();
+        return _backgroundImageContainer();
       }
       if (storeController.currentTheme.value == 4) {
-        return backgroundImageContainer();
+        return _backgroundImageContainer();
       } else {
-        return SizedBox();
+        return const SizedBox();
       }
     });
   }
@@ -35,15 +33,15 @@ class BackgroundLoad extends StatelessWidget {
   /*
   background image will returned in a container with max width and height of device
    */
-  Container backgroundImageContainer() {
+  Container _backgroundImageContainer() {
     return Container(
       constraints: const BoxConstraints.expand(),
       width: MediaQuery.of(context).size.width ,
       height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
         image: DecorationImage(
-          opacity: 0.8,
-          image: backgroundImage(),
+          // opacity: 0.8,
+          image: _backgroundImage(),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
             Colors.white.withOpacity(0.6),
@@ -57,7 +55,7 @@ class BackgroundLoad extends StatelessWidget {
   /*
   background image is retrieved from getX controller which is setted with theme in settings.
    */
-  AssetImage backgroundImage() {
+  AssetImage _backgroundImage() {
       return AssetImage('assets/images/${storeController.currentBackground}.png');
   }
 }

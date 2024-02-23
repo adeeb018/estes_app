@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:estes_app/core/controllers/getx_controller.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 class VolumeToMax extends StatelessWidget {
   VolumeToMax({super.key});
 

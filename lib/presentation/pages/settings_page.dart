@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:estes_app/core/controllers/getx_controller.dart';
 import 'package:get/get.dart';
 
-import '../widgets/backgroundImage_widget.dart';
+import '../widgets/background_image_widget.dart';
 
 class SettingsPage extends StatefulWidget {
-  SettingsPage({super.key});
+  const SettingsPage({super.key});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -28,9 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     borderColor = Colors.red;
-
     super.initState();
   }
 
@@ -41,7 +39,7 @@ class _SettingsPageState extends State<SettingsPage> {
       backgroundColor: Colors.black,
       appBar: AppBarWidget( /////////////appbar widget is called and a function parameter is passed so that back functionality can be implemented
         onpressed: () {
-          Navigator.of(context).pop();
+          Get.back();
         },
       ),
       body: Stack(
@@ -59,7 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
               Expanded(
                 child: GridView.builder(
                   // physics: NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.all(25.0),
+                  padding: const EdgeInsets.all(25.0),
                   itemCount: imageNames.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
@@ -68,7 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       childAspectRatio: 0.8),
                   itemBuilder: (context, index) {
                     // print(imageNames.length);
-                    return themeButton(imageNames[index], index + 1, index);
+                    return _themeButton(imageNames[index], index + 1, index);
                   },
                 ),
               ),
@@ -84,10 +82,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         // mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           // Padding(padding: EdgeInsets.only(top: 0)),
-                          styleButton('MuseoModerno','Font 1'),
-                          styleButton('Khyay','Font 2'),
-                          styleButton('Orbitron','Font 3'),
-                          styleButton('AllertaStencil','Font 4'),
+                          _styleButton('MuseoModerno','Font 1'),
+                          _styleButton('Khyay','Font 2'),
+                          _styleButton('Orbitron','Font 3'),
+                          _styleButton('AllertaStencil','Font 4'),
                         ],
                       ),
                     ),
@@ -105,7 +103,7 @@ class _SettingsPageState extends State<SettingsPage> {
   /*
   this function return a button with text styles will be setted by the value in parameter
    */
-  TextButton styleButton(String font, String styleText) {
+  TextButton _styleButton(String font, String styleText) {
     return TextButton(onPressed: (){
                           storeController.currentFont.value = font;
                         }, child: CorousalText(text: styleText, color: Colors.white,font:font,));
@@ -114,7 +112,7 @@ class _SettingsPageState extends State<SettingsPage> {
   /*
     this function return a widget which is a wallpaper button in settings to the gridview builder
    */
-  Widget themeButton(String imageName, int themeValue, int index) {
+  Widget _themeButton(String imageName, int themeValue, int index) {
     return GestureDetector(
       onTap: () {
         storeController.currentTheme.value = themeValue;
@@ -127,7 +125,7 @@ class _SettingsPageState extends State<SettingsPage> {
           image: imageName != ''
               ? (index + 1 != imageNames.length
                   ? DecorationImage(
-                      image: AssetImage('assets/images/${imageName}.png'), /////////// for first page and last page there will be no images present
+                      image: AssetImage('assets/images/$imageName.png'), /////////// for first page and last page there will be no images present
                       fit: BoxFit.fill)
                   : null)
               : null,
