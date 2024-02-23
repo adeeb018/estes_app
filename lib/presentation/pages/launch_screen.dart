@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:estes_app/core/controllers/getx_controller.dart';
-import 'package:estes_app/presentation/widgets/backgroundImage_widget.dart';
+import 'package:estes_app/presentation/widgets/background_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vibration/vibration.dart';

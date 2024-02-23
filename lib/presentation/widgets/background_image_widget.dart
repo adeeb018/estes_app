@@ -8,7 +8,6 @@ class BackgroundLoad extends StatelessWidget {
   final StoreController storeController = Get.find<StoreController>();
   final BuildContext context;
 
-
   @override
   Widget build(BuildContext context) {
     return Obx(() {

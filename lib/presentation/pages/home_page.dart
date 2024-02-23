@@ -1,5 +1,5 @@
 import 'package:estes_app/presentation/pages/page_theme_1.dart';
-import 'package:estes_app/presentation/widgets/backgroundImage_widget.dart';
+import 'package:estes_app/presentation/widgets/background_image_widget.dart';
 import 'package:estes_app/presentation/widgets/pairing_code.dart';
 import 'package:estes_app/presentation/widgets/swipe_widget.dart';
 import 'package:estes_app/presentation/widgets/volume_text_image.dart';
