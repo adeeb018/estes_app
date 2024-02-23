@@ -1,5 +1,5 @@
 import 'package:estes_app/core/controllers/getx_controller.dart';
-import 'package:estes_app/presentation/pages/home_page.dart';
+import 'package:estes_app/presentation/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return const GetMaterialApp(
       debugShowCheckedModeBanner: true,
       title: 'estes',
-      home: HomePage(),
+      home: WelcomeWidget(),
       // builder: EasyLoading.init(),
     );
   }

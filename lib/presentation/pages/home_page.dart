@@ -1,4 +1,5 @@
 import 'package:estes_app/presentation/pages/page_theme_1.dart';
+import 'package:estes_app/presentation/pages/welcome_page.dart';
 import 'package:estes_app/presentation/widgets/background_image_widget.dart';
 import 'package:estes_app/presentation/widgets/pairing_code.dart';
 import 'package:estes_app/presentation/widgets/swipe_widget.dart';
@@ -41,9 +42,7 @@ class _HomePageState extends State<HomePage> {
   void initState(){
     super.initState();/////////////////////////////////////////////////////////////////carousal controller is needed in other pages so we instance is created in getX
     _carouselController = storeController.carouselController;/////////////////////////so that we can use anywhere and it is initialized here, so that we don't need to access getX every time
-    storeController.bluetoothScreen.scan();//////////////////////////////////////////here we start scanning for the bluetooth devices.
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +56,7 @@ class _HomePageState extends State<HomePage> {
               _carouselController.previousPage();
             },currentView: currentView,)
           : AppBarWidget(onpressed: () {
-              _carouselController.previousPage();
+                Get.offAll(() => const WelcomeWidget());
             }, currentView: 1),
       body: _scaffoldBody(),
       bottomNavigationBar: _bottomNavigationBar(),
@@ -74,14 +73,10 @@ class _HomePageState extends State<HomePage> {
         BackgroundLoad(context: context),
         SingleChildScrollView(
           child: Column(
-            // mainAxisSize: MainAxisSize.min,
-            // mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
-            // direction: Axis.vertical,
             children: [
               SizedBox(
                   height: MediaQuery.of(context).size.height/2,
-                  child: PageThemeOne(currentView: currentView,)),
+                  child: PageThemeOne(currentView: currentView,mainContext: context,)),
               SizedBox(
                 height: MediaQuery.of(context).size.height/15,
                 child: FlutterCarousel(
@@ -258,9 +253,14 @@ class _HomePageState extends State<HomePage> {
   this function check what should be done on each next button press on homepage screen with respect to currentView in carousal controller
    */
 
+  _startBluetoothScan() async{
+    storeController.bluetoothScreen.scan();
+  }
+
   Future<void> _nextPageConstraintsCheck() async {
 
     if(currentView == 1){
+      _startBluetoothScan(); ////////////////////////////////////////////here we start scanning for the bluetooth devices.
       _carouselController.nextPage();
     }
     else if(currentView == 2){//////////////////////////////////////////if we press next on second view page if the pairing code is ok then it connect with the bluetooth device and

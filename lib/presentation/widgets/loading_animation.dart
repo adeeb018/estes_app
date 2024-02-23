@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 class LoadingWidget extends StatefulWidget {
@@ -26,7 +27,7 @@ class _LoadingWidgetState extends State<LoadingWidget> with SingleTickerProvider
       if(status == AnimationStatus.completed){
         log("LOTTIE STATUS Completed");
         widget.carouselController.nextPage();
-        Navigator.popUntil(context, ModalRoute.withName('/'));
+        Get.back();
       }
     });
   }

@@ -4,9 +4,11 @@ import 'package:get/get.dart';
 
 
 class PageThemeOne extends StatelessWidget {
-  PageThemeOne({super.key, required this.currentView});
+  PageThemeOne({super.key, required this.currentView, required this.mainContext});
 
   final int currentView;
+
+  final BuildContext mainContext;
 
   final StoreController storeController = Get.find<StoreController>();
 
@@ -21,7 +23,7 @@ class PageThemeOne extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               _rotatingContainer(currentView),
-              Image.asset("assets/images/rocket_1.png",),
+              Image.asset("assets/images/rocket_1.png",height: MediaQuery.of(mainContext).size.height/3,),
             ],
           ),
         );
@@ -38,7 +40,7 @@ class PageThemeOne extends StatelessWidget {
           // color: Colors.red,
           // color: Colors.red,
           // width: MediaQuery.of(context).size.width,
-          child: Image.asset('assets/images/astronaut_1.png'),
+          child: Image.asset('assets/images/astronaut_1.png',height: MediaQuery.of(mainContext).size.height/2.5),
         );
       }
       else {

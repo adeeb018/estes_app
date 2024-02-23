@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CorousalText extends StatelessWidget {
-  CorousalText({super.key,required this.text,required this.color,this.font});
+  CorousalText({super.key,required this.text,required this.color,this.font,this.fontSize});
 
   final StoreController storeController = Get.find<StoreController>();
   final String text;
   // final String fontFamily;
   final Color color;
+
+  final double? fontSize;
 
   final String? font;
   @override
@@ -31,7 +33,7 @@ class CorousalText extends StatelessWidget {
     return TextStyle(
         color: color,
         fontFamily: font ?? storeController.currentFont.value,
-        fontSize: 18.0,
+        fontSize: fontSize??18.0,
         fontWeight: FontWeight.w700);
   }
 }

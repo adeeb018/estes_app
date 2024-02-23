@@ -26,11 +26,11 @@ class _AfterLaunchState extends State<AfterLaunch> {
       extendBodyBehindAppBar: true,
       extendBody: true,
       backgroundColor: Colors.black,
-      appBar: AppBarWidget(onpressed: (){
+      appBar: AppBarWidget(onpressed: () async {
         storeController.carouselController.previousPage();
 
-        storeController.bluetoothScreen.buttonAction([0xA0, 0x01, 0x00, 0xA1]);/////here both lights of device has been turned off
-        storeController.bluetoothScreen.buttonAction([0xA0, 0x02, 0x00, 0xA2]);
+        await storeController.bluetoothScreen.buttonAction([0xA0, 0x01, 0x00, 0xA1]);/////here both lights of device has been turned off
+        await storeController.bluetoothScreen.buttonAction([0xA0, 0x02, 0x00, 0xA2]);
 
         Future ft = Future(() {});
         ft = ft.then((_){
