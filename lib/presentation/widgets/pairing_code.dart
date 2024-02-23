@@ -1,19 +1,33 @@
+
 import 'package:estes_app/core/controllers/getx_controller.dart';
 import 'package:estes_app/presentation/widgets/corousal_text_style.dart';
+import 'package:estes_app/presentation/widgets/qr_scan_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class PairingCode extends StatelessWidget {
-  PairingCode({super.key});
+
+class PairingCode extends StatefulWidget {
+  const PairingCode({super.key});
+
+  @override
+  State<PairingCode> createState() => _PairingCodeState();
+}
+
+class _PairingCodeState extends State<PairingCode> {
 
   final StoreController storeController = Get.find<StoreController>();
-  // final String currentFont;
+
   @override
   Widget build(BuildContext context) {
+
     return Obx(() => Container(
       width: MediaQuery.of(context).size.width * 0.95,
-      padding: EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(top: 20.0),
       child: TextField(
+          controller: storeController.paringTextController.value,
+          keyboardType: TextInputType.number,
+          onTap: (){
+          },
           cursorColor: Colors.white,
           style: const TextStyle(
               color: Colors.white,
@@ -22,15 +36,27 @@ class PairingCode extends StatelessWidget {
               fontWeight: FontWeight.bold),
           decoration: InputDecoration(
               filled: true,
-              fillColor: storeController.currentTheme.value == 2?Color.fromRGBO(0, 0, 0, 0.7):Color.fromRGBO(0, 0, 0, 0.4),
+              fillColor: storeController.currentTheme.value == 2?const Color.fromRGBO(0, 0, 0, 0.7):const Color.fromRGBO(0, 0, 0, 0.4),
               enabledBorder: _pairingCodeBorderStyle(),
               focusedBorder: _pairingCodeBorderStyle(),
-              suffixIcon: const Padding(
-                padding: EdgeInsets.only(right: 5.0),
-                child: Icon(
-                  Icons.qr_code_2_rounded,
-                  color: Colors.white,
-                  size: 50.0,
+              suffixIcon: Padding(
+                padding: const EdgeInsets.only(right: 5.0),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.qr_code_2_rounded,
+                    color: Colors.white,
+                    size: 50.0,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return QrScreen();
+                      }
+                      ),
+                    );
+                  },
                 ),
               ),
               hintText: 'Pairing code',
@@ -40,6 +66,7 @@ class PairingCode extends StatelessWidget {
     );
   }
 
+
   /*
   for different theme it have different border radius for pairing code
   so for each we pass different parameters here
@@ -47,26 +74,26 @@ class PairingCode extends StatelessWidget {
   OutlineInputBorder _pairingCodeBorderStyle() {
 
     if(storeController.currentTheme.value == 1){
-      return outlineInputBorder(15);
+      return _outlineInputBorder(15);
     }else if(storeController.currentTheme.value == 2){
-      return outlineInputBorder(10);
+      return _outlineInputBorder(10);
     }else if(storeController.currentTheme.value == 3){
-      return outlineInputBorder(0);
+      return _outlineInputBorder(0);
     }else if(storeController.currentTheme.value == 4){
-      return outlineInputBorder(5);
+      return _outlineInputBorder(5);
     }
     else{
-      return outlineInputBorder(0);
+      return _outlineInputBorder(0);
     }
   }
 
   /*
   border is returned white for 1st theme others are transperant
    */
-  OutlineInputBorder outlineInputBorder(double radius) {
+  OutlineInputBorder _outlineInputBorder(double radius) {
     return OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(radius)),
-    borderSide: storeController.currentTheme.value == 1?BorderSide(color: Colors.white, width: 2.0):BorderSide(color: Colors.transparent),
+    borderSide: storeController.currentTheme.value == 1?const BorderSide(color: Colors.white, width: 2.0):const BorderSide(color: Colors.transparent),
   );
   }
 }
