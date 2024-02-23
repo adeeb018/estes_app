@@ -1,20 +1,17 @@
-import 'dart:developer';
-
 import 'package:estes_app/presentation/pages/page_theme_1.dart';
 import 'package:estes_app/presentation/widgets/backgroundImage_widget.dart';
-import 'package:estes_app/presentation/widgets/bluetooth_connection.dart';
 import 'package:estes_app/presentation/widgets/pairing_code.dart';
 import 'package:estes_app/presentation/widgets/swipe_widget.dart';
 import 'package:estes_app/presentation/widgets/volume_text_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import '../widgets/appbar_widget.dart';
 import '../widgets/corousal_text_style.dart';
 import 'package:estes_app/core/controllers/getx_controller.dart';
+
+import '../widgets/loading_animation.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,39 +22,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final CarouselController _carouselController = CarouselController();
 
   final MaterialStatesController textStatesController = MaterialStatesController();
 
+  final List<int> swipeList = [1, 2, 3, 4, 5, 6];//////////////////////created for carousal view creation
 
-  final List<int> swipeList = [1, 2, 3, 4, 5, 6];
-
-  int currentView = 1;
+  int currentView = 1;/////////////////////////////////////////////current carousal view
 
   // int currentTheme = 1;
 
   StoreController storeController = Get.find<StoreController>();
 
-  BluetoothScreen bluetoothScreen = BluetoothScreen();
+  late final CarouselController _carouselController;
+
+
 
   @override
   void initState(){
-    super.initState();
-    bluetoothScreen.scan();
-  }
-
-  bool _isPairingCodeOk(){
-    String pairingCode = storeController.paringTextController.value.text;
-    if(pairingCode.length == 6) {
-      for(int i=0;i<pairingCode.length;i++){
-        if(pairingCode[i].isAlphabetOnly){
-          return false;
-        }
-      }
-      return true;
-    } else {
-      return false;
-    }
+    super.initState();/////////////////////////////////////////////////////////////////carousal controller is needed in other pages so we instance is created in getX
+    _carouselController = storeController.carouselController;/////////////////////////so that we can use anywhere and it is initialized here, so that we don't need to access getX every time
+    storeController.bluetoothScreen.scan();//////////////////////////////////////////here we start scanning for the bluetooth devices.
   }
 
 
@@ -71,12 +55,12 @@ class _HomePageState extends State<HomePage> {
       appBar: currentView != 1
           ? AppBarWidget(onpressed: () {
               _carouselController.previousPage();
-            },bluetoothScreen: bluetoothScreen,currentView: currentView,)
+            },currentView: currentView,)
           : AppBarWidget(onpressed: () {
               _carouselController.previousPage();
             }, currentView: 1),
-      body: scaffoldBody(),
-      bottomNavigationBar: bottomNavigationBar(),
+      body: _scaffoldBody(),
+      bottomNavigationBar: _bottomNavigationBar(),
     );
   }
 
@@ -84,7 +68,7 @@ class _HomePageState extends State<HomePage> {
   the scaffoldBody is defined here as a stack to contain background image
    */
 
-  Stack scaffoldBody() {
+  Stack _scaffoldBody() {
     return Stack(
       children: [
         BackgroundLoad(context: context),
@@ -95,10 +79,10 @@ class _HomePageState extends State<HomePage> {
             // crossAxisAlignment: CrossAxisAlignment.stretch,
             // direction: Axis.vertical,
             children: [
-              Container(
+              SizedBox(
                   height: MediaQuery.of(context).size.height/2,
                   child: PageThemeOne(currentView: currentView,)),
-              Container(
+              SizedBox(
                 height: MediaQuery.of(context).size.height/15,
                 child: FlutterCarousel(
                   options: CarouselOptions(
@@ -120,12 +104,12 @@ class _HomePageState extends State<HomePage> {
                   }).toList(),
                 ),
               ),
-              Container(
+              SizedBox(
               // color: Colors.blue,
               height: MediaQuery.of(context).size.height/3,
               child: Padding(
                 padding: const EdgeInsets.only(top: 10),
-                child: sliderComponent(),
+                child: _sliderComponent(),
               ),
                                   ),
             ],
@@ -140,13 +124,13 @@ class _HomePageState extends State<HomePage> {
   with respect to the currentView of the slider.
    */
 
-  Widget sliderComponent() {
+  Widget _sliderComponent() {
     switch (currentView) {
       case 1:
-        return pageInfo();
+        return _pageInfo();
       case 2:
         return Column(
-          children: [pageInfo(), PairingCode()],
+          children: [_pageInfo(), const PairingCode()],
         );
       case 3:
         return Padding(
@@ -155,99 +139,25 @@ class _HomePageState extends State<HomePage> {
             alignment: WrapAlignment.center,
             direction: Axis.horizontal,
             // mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [VolumeToMax(), pageInfo()],
+            children: [VolumeToMax(), _pageInfo()],
           ),
         );
       case 4:
-        return pageInfo();
+        return _pageInfo();
       case 5:
-        return pageInfo();
+        return _pageInfo();
       case 6:
-        return pageInfo();
+        return _pageInfo();
       default:
         return const SizedBox();
     }
   }
 
-  /*
-  bottom navigation bar is present for first 4 view in the slider
-  other view doesn't have bottom navigation bar
-   */
-  SizedBox bottomNavigationBar() {
-    if (currentView == 5 || currentView == 6) {
-      return const SizedBox(
-        height: 50,
-      );
-    } else {
-      return SizedBox(
-        height: 50,
-        // color: Colors.blue,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          // crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            TextButton(
-              statesController: textStatesController,
-              style: const ButtonStyle(alignment: Alignment.bottomRight),
-              onPressed: _nextPageConstraintsCheck,
-              child: CorousalText(text: 'Next', color: Colors.white),
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
-  Future<void> _nextPageConstraintsCheck() async {
-
-    if(currentView == 1){
-      _carouselController.nextPage();
-    }
-
-    else if(currentView == 2){
-      const snackBar = SnackBar(
-        content: Text('Try again!!Not Connected'),
-      );
-      if(_isPairingCodeOk()){
-        if(await bluetoothScreen.connect()) {
-          _carouselController.nextPage();
-          await bluetoothScreen.buttonAction([0xA0, 0x01, 0x01, 0xA2]);
-        }
-        else if(context.mounted){
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          return;
-        }
-      }else{
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        return;
-      }
-    }
-    else if(currentView == 3){
-      const snackBar = SnackBar(
-        content: Text('Please set Device volume to MAX and Try again..'),
-      );
-      final volume = await FlutterVolumeController.getVolume();
-      if(volume == 1.0){
-        _carouselController.nextPage();
-      }
-      else if(context.mounted){
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-    }
-    else{
-      _carouselController.nextPage();
-    }
-  }
-
-  Future<void> volumeCheck() async {
-    final volume = await FlutterVolumeController.getVolume();
-    log("CURRENT VOLUME IS $volume");
-  }
-
   /*This function return the text to be printed below the main container page in the homepage, the text content
   will be based on the currentpage view value.
    */
-  Widget pageInfo() {
+
+  Widget _pageInfo() {
     switch (currentView) {
       case 1:
         return CorousalText(
@@ -263,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                 text: 'Pair the device using pairing code or QR code',
                 // fontFamily: currentFont,
                 color: Colors.white),
-          ],),
+            ],),
         );
       case 3:
         return Padding(
@@ -279,9 +189,9 @@ class _HomePageState extends State<HomePage> {
             // fontFamily: currentFont,
             color: Colors.white);
       case 5:
-        return swipeWidget('Swipe to Ready');
+        return _swipeWidget('Swipe to Ready');
       case 6:
-        return swipeWidget('Swipe to ARM');
+        return _swipeWidget('Swipe to ARM');
 
       default:
         return CorousalText(
@@ -294,23 +204,116 @@ class _HomePageState extends State<HomePage> {
   /*
     this function is used to create a swipe widget and returns to the slider.
    */
-  Widget swipeWidget(String text) {
+  Widget _swipeWidget(String text) {
     return Column(
       children: [
         const SizedBox(
           height: 40.0,
         ),
-        Obx(() => SwipeWidget(
+        SwipeWidget(
           context: context,
-          // currentFont: currentFont,
-          linearGradient: storeController.currentTheme.value == 1?storeController.linearGradient:null,
+          // linearGradient: storeController.currentTheme.value == 1?null:null,
           swipeText: text,
           onSwipe: () {
-            _carouselController.nextPage();
+            if(currentView == 5){
+              Get.to(() => LoadingWidget(carouselController: _carouselController,)); ////////////////if current view is 5 and on swipe we need to show a loading screen.
+            }
+            // _carouselController.nextPage();
           },
-        ),
         ),
       ],
     );
   }
+
+  /*
+  bottom navigation bar is present for first 4 view in the slider
+  other view doesn't have bottom navigation bar
+   */
+  SizedBox _bottomNavigationBar() {
+    if (currentView == 5 || currentView == 6) {
+      return const SizedBox(
+        height: 50,
+      );
+    } else {
+      return SizedBox(
+        height: 50,
+        // color: Colors.blue,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          // crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            TextButton(
+              // statesController: textStatesController,
+              style: const ButtonStyle(alignment: Alignment.bottomRight),
+              onPressed: _nextPageConstraintsCheck,
+              child: CorousalText(text: 'Next', color: Colors.white),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  /*
+  this function check what should be done on each next button press on homepage screen with respect to currentView in carousal controller
+   */
+
+  Future<void> _nextPageConstraintsCheck() async {
+
+    if(currentView == 1){
+      _carouselController.nextPage();
+    }
+    else if(currentView == 2){//////////////////////////////////////////if we press next on second view page if the pairing code is ok then it connect with the bluetooth device and
+      const snackBar = SnackBar(////////////////////////////////////////move to next view in the page if connection problem occurs a snackbar is shown to the user
+        content: Text('Try again!!Not Connected'),
+      );
+      if(_isPairingCodeOk()){
+        if(await storeController.bluetoothScreen.connect()) {
+          _carouselController.nextPage();
+        }
+        else if(context.mounted){
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          return;
+        }
+      }else{
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        return;
+      }
+    }
+    else if(currentView == 3){
+      const snackBar = SnackBar(////////////////////////////////////////////////////here volume of the device is taken using a package and if it is maximum the moved to next view
+        content: Text('Please set Device volume to MAX and Try again..'),
+      );
+      final volume = await FlutterVolumeController.getVolume(); //////////////////getting current volume status
+      if(volume == 1.0){
+        _carouselController.nextPage();
+      }
+      else if(context.mounted){
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    }
+    else{
+      _carouselController.nextPage();
+    }
+  }
+
+
+  /*
+   this code check whether the entered pairing code is numerical and of 6 digits.
+   */
+
+  bool _isPairingCodeOk(){
+    String pairingCode = storeController.paringTextController.value.text;
+    if(pairingCode.length == 6) {
+      for(int i=0;i<pairingCode.length;i++){
+        if(pairingCode[i].isAlphabetOnly){
+          return false;
+        }
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }

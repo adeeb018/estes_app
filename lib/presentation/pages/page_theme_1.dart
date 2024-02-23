@@ -7,13 +7,12 @@ class PageThemeOne extends StatelessWidget {
   PageThemeOne({super.key, required this.currentView});
 
   final int currentView;
-  // BuildContext? mainContext;
 
   final StoreController storeController = Get.find<StoreController>();
 
   @override
   Widget build(BuildContext context) {
-           // print(MediaQuery.of(mainContext!).size.height);                           //////////////////////////////////With repect the current Them different elements are returned from here on some instances
+                                      //////////////////////////////////With respect the current Theme different elements are returned from here on some instances
     return Obx(() {                   /////////////////////////////////there is only a fixed sizedBox to fill out the portions in the mainpage.
       if (storeController.currentTheme.value == 1) {
         return Container(

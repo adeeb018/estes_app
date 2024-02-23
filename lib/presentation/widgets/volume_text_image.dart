@@ -1,10 +1,9 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:estes_app/core/controllers/getx_controller.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 class VolumeToMax extends StatelessWidget {
   VolumeToMax({super.key});
 
@@ -24,10 +23,5 @@ class VolumeToMax extends StatelessWidget {
           return const SizedBox();
         }
       });
-  }
-
-  void volumeCheck() async {
-    final volume = await FlutterVolumeController.getVolume();
-    log("CURRENT VOLUME IS $volume");
   }
 }

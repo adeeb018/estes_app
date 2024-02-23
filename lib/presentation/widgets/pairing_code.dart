@@ -1,14 +1,9 @@
-import 'dart:ffi';
-import 'dart:math';
 
 import 'package:estes_app/core/controllers/getx_controller.dart';
 import 'package:estes_app/presentation/widgets/corousal_text_style.dart';
 import 'package:estes_app/presentation/widgets/qr_scan_widget.dart';
-import 'package:estes_app/presentation/widgets/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
-import 'package:qr_mobile_vision/qr_camera.dart';
 
 
 class PairingCode extends StatefulWidget {
@@ -19,20 +14,15 @@ class PairingCode extends StatefulWidget {
 }
 
 class _PairingCodeState extends State<PairingCode> {
+
   final StoreController storeController = Get.find<StoreController>();
 
-  // final TextEditingController textController = TextEditingController();
-
-  // String? result;
-
-
-  // final String currentFont;
   @override
   Widget build(BuildContext context) {
 
     return Obx(() => Container(
       width: MediaQuery.of(context).size.width * 0.95,
-      padding: EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(top: 20.0),
       child: TextField(
           controller: storeController.paringTextController.value,
           keyboardType: TextInputType.number,
@@ -46,7 +36,7 @@ class _PairingCodeState extends State<PairingCode> {
               fontWeight: FontWeight.bold),
           decoration: InputDecoration(
               filled: true,
-              fillColor: storeController.currentTheme.value == 2?Color.fromRGBO(0, 0, 0, 0.7):Color.fromRGBO(0, 0, 0, 0.4),
+              fillColor: storeController.currentTheme.value == 2?const Color.fromRGBO(0, 0, 0, 0.7):const Color.fromRGBO(0, 0, 0, 0.4),
               enabledBorder: _pairingCodeBorderStyle(),
               focusedBorder: _pairingCodeBorderStyle(),
               suffixIcon: Padding(
@@ -103,7 +93,7 @@ class _PairingCodeState extends State<PairingCode> {
   OutlineInputBorder _outlineInputBorder(double radius) {
     return OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(radius)),
-    borderSide: storeController.currentTheme.value == 1?BorderSide(color: Colors.white, width: 2.0):BorderSide(color: Colors.transparent),
+    borderSide: storeController.currentTheme.value == 1?const BorderSide(color: Colors.white, width: 2.0):const BorderSide(color: Colors.transparent),
   );
   }
 }

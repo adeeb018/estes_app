@@ -10,7 +10,7 @@ class CorousalText extends StatelessWidget {
   // final String fontFamily;
   final Color color;
 
-  String? font;
+  final String? font;
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -22,7 +22,7 @@ class CorousalText extends StatelessWidget {
         );
       }
       else {
-        return SizedBox();
+        return const SizedBox();
       }
     });
   }

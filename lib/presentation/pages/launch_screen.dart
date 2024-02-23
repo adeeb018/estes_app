@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'package:estes_app/core/controllers/getx_controller.dart';
 import 'package:estes_app/presentation/widgets/backgroundImage_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 import 'package:vibration/vibration.dart';
 import '../widgets/appbar_widget.dart';
 import '../widgets/circle_progress.dart';
@@ -19,6 +19,8 @@ class LaunchRocket extends StatefulWidget {
 
 class _LaunchRocketState extends State<LaunchRocket>
     with TickerProviderStateMixin {
+
+  StoreController storeController = Get.find<StoreController>();
 
   bool isLaunchTimeVisible = false;
   bool isVibrating = false;
@@ -44,7 +46,7 @@ class _LaunchRocketState extends State<LaunchRocket>
       duration: const Duration(milliseconds: 5000),
     );
 
-    _rocketAnimationController = AnimationController(vsync: this,duration: Duration(milliseconds: 5000),);
+    _rocketAnimationController = AnimationController(vsync: this,duration: const Duration(milliseconds: 5000),);
 
 
     _animation = Tween<double>(begin: 0, end: 100).animate(_animationController)
@@ -87,8 +89,9 @@ the status listener listen for values forward,completed,reverse and dismissed
     });
   }
 
-  void _handleAnimationCompleted() {
-    Get.to(() => AfterLaunch());
+  Future<void> _handleAnimationCompleted() async {
+    await storeController.bluetoothScreen.buttonAction([0xA0, 0x02, 0x01, 0xA3]);
+    Get.off(() => const AfterLaunch());
   }
 
   void _handleReverseAnimation() {
@@ -145,7 +148,13 @@ the status listener listen for values forward,completed,reverse and dismissed
       backgroundColor: Colors.black,
       appBar: AppBarWidget(
         onpressed: () {
-          Navigator.popUntil(context, ModalRoute.withName('/'));
+          storeController.carouselController.previousPage();
+          Future ft = Future(() {});
+          ft = ft.then((_){
+            return Future.delayed(const Duration(milliseconds: 200),(){/////////////////here on pressing back button we navigate to 5 th currentView of homePage.
+              Get.back();///////////////////////////////////////////////////////////////the 200 millisecond delay is used to remove the transition of 6 th view to 5 th from user.
+            });
+          });
         },
       ),
       body: Stack(

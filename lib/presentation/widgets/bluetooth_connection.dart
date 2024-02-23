@@ -1,10 +1,7 @@
 import 'dart:developer';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class BluetoothScreen {
-  bool _isButtonDisabled = false;
   ScanResult? deviceToConnect;
 
   // constructor
@@ -36,7 +33,6 @@ class BluetoothScreen {
       withNames:["DSD TECH"]);
 
     await FlutterBluePlus.isScanning.where((val) => val == false).first;
-    _isButtonDisabled = true;
   }
 
   Future<bool> connect() async {
@@ -61,7 +57,6 @@ class BluetoothScreen {
     // Disconnect from device
     await deviceToConnect?.device.disconnect();
     // device.disconnect();
-    _isButtonDisabled = false;
     log("BLE APP Disconnected");
   }
 
