@@ -37,7 +37,7 @@ class BluetoothScreen {
 
   Future<bool> connect() async {
     if (deviceToConnect != null) {
-      deviceToConnect?.device.connect();
+      await deviceToConnect?.device.connect();
       if(deviceToConnect!.device.isConnected){
         return true;
       }

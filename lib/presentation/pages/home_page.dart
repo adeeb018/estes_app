@@ -6,13 +6,14 @@ import 'package:estes_app/presentation/widgets/pairing_code.dart';
 import 'package:estes_app/presentation/widgets/swipe_widget.dart';
 import 'package:estes_app/presentation/widgets/volume_text_image.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
+import '../../core/services/location_service.dart';
 import '../widgets/appbar_widget.dart';
 import '../widgets/corousal_text_style.dart';
 import 'package:estes_app/core/controllers/getx_controller.dart';
-
 import '../widgets/loading_animation.dart';
 
 class HomePage extends StatefulWidget {
@@ -37,12 +38,21 @@ class _HomePageState extends State<HomePage> {
 
   late final CarouselController? _carouselController;
 
-
+  late bool isLocationOn;
 
   @override
   void initState(){
     super.initState();/////////////////////////////////////////////////////////////////carousal controller is needed in other pages so we instance is created in getX
     _carouselController = storeController.carouselController;/////////////////////////so that we can use anywhere and it is initialized here, so that we don't need to access getX every time
+    _turnOnLocation().then((value) => _turnOnBluetooth());
+  }
+
+  /*
+    This function is used for turning the bluetooth ON, on android
+   */
+
+  _turnOnBluetooth() async{
+   await FlutterBluePlus.turnOn();
   }
 
   @override
@@ -86,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                 child: CarouselSlider(
                     carouselController: _carouselController,
                     options: CarouselOptions(
-                      // scrollPhysics: const NeverScrollableScrollPhysics(),
+                      scrollPhysics: const NeverScrollableScrollPhysics(),
                       onPageChanged: (index, reason){
                         currentView = index + 1;
                         //setState is called to update the current page with respect to the current view
@@ -210,6 +220,7 @@ class _HomePageState extends State<HomePage> {
   /*
     this function is used to create a swipe widget and returns to the slider.
    */
+
   Widget _swipeWidget(String text) {
     return Column(
       children: [
@@ -235,6 +246,7 @@ class _HomePageState extends State<HomePage> {
   bottom navigation bar is present for first 4 view in the slider
   other view doesn't have bottom navigation bar
    */
+
   SizedBox _bottomNavigationBar() {
     if (currentView == 5 || currentView == 6) {
       return const SizedBox(
@@ -261,18 +273,45 @@ class _HomePageState extends State<HomePage> {
   }
 
   /*
-  this function check what should be done on each next button press on homepage screen with respect to currentView in carousal controller
+    This function start bluetooth to scan
    */
 
   _startBluetoothScan() async{
     storeController.bluetoothScreen.scan();
   }
 
+  /*
+    This function pop up a request from user to turn location permission on
+   */
+
+  Future<void> _turnOnLocation() async {
+    LocationService location = LocationService();
+    isLocationOn = await location.requestPermission();
+  }
+
+  /*
+    If location and bluetooth is on, then it start scanning, and move to next carousel screen
+   */
+
+  void _moveToNextOnLocationOn(){
+    _startBluetoothScan(); ////////////////////////////////////////////here we start scanning for the bluetooth devices.
+    _carouselController?.nextPage();
+  }
+
+  /*
+  this function check what should be done on each next button press on homepage screen with respect to currentView in carousal controller
+   */
+
   Future<void> _nextPageConstraintsCheck() async {
 
     if(currentView == 1){
-      _startBluetoothScan(); ////////////////////////////////////////////here we start scanning for the bluetooth devices.
-      _carouselController?.nextPage();
+      if(isLocationOn){
+        _moveToNextOnLocationOn();
+      }else{
+        const snackBar = SnackBar(
+              content: Text('Please turn On location and bluetooth or else App features won\'t work'),);
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
     }
     else if(currentView == 2){//////////////////////////////////////////if we press next on second view page if the pairing code is ok then it connect with the bluetooth device and
       const snackBar = SnackBar(////////////////////////////////////////move to next view in the page if connection problem occurs a snackbar is shown to the user
@@ -308,7 +347,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-
   /*
    this code check whether the entered pairing code is numerical and of 6 digits.
    */
@@ -328,44 +366,3 @@ class _HomePageState extends State<HomePage> {
   }
 
 }
-
-// class CustomSlider extends CircularWaveSlideIndicator{
-//
-//   CustomSlider(this.currentView);
-//
-//   StoreController storeController = Get.find<StoreController>();
-//   final int currentView;
-//   @override
-//   Widget build(int currentPage, double pageDelta, int itemCount) {
-//     var activeColor = const Color(0xFFFFFFFF);
-//     var backgroundColor = const Color(0x66FFFFFF);
-//
-//     // if (SchedulerBinding.instance.window.platformBrightness ==
-//     //     Brightness.light) {
-//     //   activeColor = const Color(0xFF000000);
-//     //   backgroundColor = const Color(0xFF878484);
-//     // }
-//
-//     return Container(
-//       alignment: alignment,
-//       padding: padding,
-//       child: SizedBox(
-//         width: itemCount * itemSpacing,
-//         height: currentView == currentPage?indicatorRadius*5:indicatorRadius * 5,
-//         child: CustomPaint(
-//           painter: CircularWaveIndicatorPainter(
-//             currentIndicatorColor: currentIndicatorColor ?? activeColor,
-//             indicatorBackgroundColor:
-//             indicatorBackgroundColor ?? backgroundColor,
-//             currentPage: currentPage,
-//             pageDelta: pageDelta,
-//             itemCount: itemCount,
-//             radius: storeController.currentView == currentPage?indicatorRadius*3:indicatorRadius*1.5,
-//             indicatorBorderColor: indicatorBorderColor,
-//             borderWidth: indicatorBorderWidth,
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
