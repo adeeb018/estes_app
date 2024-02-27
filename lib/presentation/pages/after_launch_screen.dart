@@ -26,11 +26,11 @@ class _AfterLaunchState extends State<AfterLaunch> {
       extendBodyBehindAppBar: true,
       extendBody: true,
       backgroundColor: Colors.black,
-      appBar: AppBarWidget(onpressed: (){
-        storeController.carouselController.previousPage();
+      appBar: AppBarWidget(onpressed: () async {
+        storeController.carouselController?.previousPage();
 
-        storeController.bluetoothScreen.buttonAction([0xA0, 0x01, 0x00, 0xA1]);/////here both lights of device has been turned off
-        storeController.bluetoothScreen.buttonAction([0xA0, 0x02, 0x00, 0xA2]);
+        await storeController.bluetoothScreen.buttonAction([0xA0, 0x01, 0x00, 0xA1]);/////here both lights of device has been turned off
+        await storeController.bluetoothScreen.buttonAction([0xA0, 0x02, 0x00, 0xA2]);
 
         Future ft = Future(() {});
         ft = ft.then((_){
@@ -39,30 +39,33 @@ class _AfterLaunchState extends State<AfterLaunch> {
           });
         });
       }),
-      body: Stack(
-        children: [
-          BackgroundLoad(context: context),
-          Obx(() => storeController.currentTheme.value == 1?const SizedBox():Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            decoration: const BoxDecoration(
-              color: Color.fromRGBO(45, 45, 45, 0.82),
-              // rgba(67, 67, 67, 1),
+      body: PopScope(
+        canPop: false,
+        child: Stack(
+          children: [
+            BackgroundLoad(context: context),
+            Obx(() => storeController.currentTheme.value == 1?const SizedBox():Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: const BoxDecoration(
+                color: Color.fromRGBO(45, 45, 45, 0.82),
+                // rgba(67, 67, 67, 1),
+              ),
+            ),),
+            Center(
+              child: Flex(
+                  direction: Axis.vertical,
+                  children:[
+                    Expanded(flex:10,child: Align(alignment:Alignment.bottomCenter,child: PageImageContainer(currentState: currentState,)),),
+                    Expanded(flex:5,child: Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: pageTextInfo(),
+                    ),),
+                  ]
+              ),
             ),
-          ),),
-          Center(
-            child: Flex(
-                direction: Axis.vertical,
-                children:[
-                  Expanded(flex:10,child: Align(alignment:Alignment.bottomCenter,child: PageImageContainer(currentState: currentState,)),),
-                  Expanded(flex:5,child: Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: pageTextInfo(),
-                  ),),
-                ]
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: (currentState == 3 || currentState == 5)?const SizedBox():SizedBox(
         height: 60,

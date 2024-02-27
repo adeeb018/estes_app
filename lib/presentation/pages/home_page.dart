@@ -1,10 +1,12 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:estes_app/presentation/pages/page_theme_1.dart';
+import 'package:estes_app/presentation/pages/welcome_page.dart';
 import 'package:estes_app/presentation/widgets/background_image_widget.dart';
 import 'package:estes_app/presentation/widgets/pairing_code.dart';
 import 'package:estes_app/presentation/widgets/swipe_widget.dart';
 import 'package:estes_app/presentation/widgets/volume_text_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+// import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:get/get.dart';
 import '../widgets/appbar_widget.dart';
@@ -33,7 +35,7 @@ class _HomePageState extends State<HomePage> {
 
   StoreController storeController = Get.find<StoreController>();
 
-  late final CarouselController _carouselController;
+  late final CarouselController? _carouselController;
 
 
 
@@ -41,9 +43,7 @@ class _HomePageState extends State<HomePage> {
   void initState(){
     super.initState();/////////////////////////////////////////////////////////////////carousal controller is needed in other pages so we instance is created in getX
     _carouselController = storeController.carouselController;/////////////////////////so that we can use anywhere and it is initialized here, so that we don't need to access getX every time
-    storeController.bluetoothScreen.scan();//////////////////////////////////////////here we start scanning for the bluetooth devices.
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +54,14 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.black,
       appBar: currentView != 1
           ? AppBarWidget(onpressed: () {
-              _carouselController.previousPage();
+              _carouselController?.previousPage();
             },currentView: currentView,)
           : AppBarWidget(onpressed: () {
-              _carouselController.previousPage();
+                Get.offAll(() => const WelcomeWidget());
             }, currentView: 1),
-      body: _scaffoldBody(),
+      body: PopScope(
+          canPop: false,
+          child: _scaffoldBody()),
       bottomNavigationBar: _bottomNavigationBar(),
     );
   }
@@ -74,35 +76,39 @@ class _HomePageState extends State<HomePage> {
         BackgroundLoad(context: context),
         SingleChildScrollView(
           child: Column(
-            // mainAxisSize: MainAxisSize.min,
-            // mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
-            // direction: Axis.vertical,
             children: [
               SizedBox(
                   height: MediaQuery.of(context).size.height/2,
-                  child: PageThemeOne(currentView: currentView,)),
+                  child: PageThemeOne(currentView: currentView,mainContext: context,)),
               SizedBox(
                 height: MediaQuery.of(context).size.height/15,
-                child: FlutterCarousel(
-                  options: CarouselOptions(
-                    physics: const NeverScrollableScrollPhysics(),
-                    controller: _carouselController,
-                    onPageChanged: (index, reason) {
-                      currentView = index + 1;
-                      //setState is called to update the current page with respect to the current view
-                      setState(() {});
-                    },
-                    height: 50.0,
-                    indicatorMargin: 10.0,
-                    showIndicator: true,
-                    slideIndicator: CircularWaveSlideIndicator(),
-                    viewportFraction: 0.9,
-                  ),
-                  items: swipeList.map((i) {
-                    return const Text('');
-                  }).toList(),
-                ),
+                width: MediaQuery.of(context).size.width,
+                child: CarouselSlider(
+                    carouselController: _carouselController,
+                    options: CarouselOptions(
+                      // scrollPhysics: const NeverScrollableScrollPhysics(),
+                      onPageChanged: (index, reason){
+                        currentView = index + 1;
+                        //setState is called to update the current page with respect to the current view
+                        setState(() {});
+                      },
+                      // height: 50,
+                      viewportFraction: .04,
+                      enlargeCenterPage: true,
+                      enableInfiniteScroll: false,
+                      aspectRatio: 16/5,
+                      // disableCenter: true,
+                      enlargeFactor: 0.35,
+                      //autoPlay: true,
+
+                    ),
+                    items: List.generate(6, (index) => Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                    ))
+                )
               ),
               SizedBox(
               // color: Colors.blue,
@@ -166,7 +172,7 @@ class _HomePageState extends State<HomePage> {
             color: Colors.white);
       case 2:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 80.0),
+          padding: const EdgeInsets.symmetric(horizontal: 68.0),
           child: Wrap(
             direction: Axis.horizontal,
             children: [CorousalText(
@@ -258,10 +264,15 @@ class _HomePageState extends State<HomePage> {
   this function check what should be done on each next button press on homepage screen with respect to currentView in carousal controller
    */
 
+  _startBluetoothScan() async{
+    storeController.bluetoothScreen.scan();
+  }
+
   Future<void> _nextPageConstraintsCheck() async {
 
     if(currentView == 1){
-      _carouselController.nextPage();
+      _startBluetoothScan(); ////////////////////////////////////////////here we start scanning for the bluetooth devices.
+      _carouselController?.nextPage();
     }
     else if(currentView == 2){//////////////////////////////////////////if we press next on second view page if the pairing code is ok then it connect with the bluetooth device and
       const snackBar = SnackBar(////////////////////////////////////////move to next view in the page if connection problem occurs a snackbar is shown to the user
@@ -269,7 +280,7 @@ class _HomePageState extends State<HomePage> {
       );
       if(_isPairingCodeOk()){
         if(await storeController.bluetoothScreen.connect()) {
-          _carouselController.nextPage();
+          _carouselController?.nextPage();
         }
         else if(context.mounted){
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -286,14 +297,14 @@ class _HomePageState extends State<HomePage> {
       );
       final volume = await FlutterVolumeController.getVolume(); //////////////////getting current volume status
       if(volume == 1.0){
-        _carouselController.nextPage();
+        _carouselController?.nextPage();
       }
       else if(context.mounted){
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
     else{
-      _carouselController.nextPage();
+      _carouselController?.nextPage();
     }
   }
 
@@ -317,3 +328,44 @@ class _HomePageState extends State<HomePage> {
   }
 
 }
+
+// class CustomSlider extends CircularWaveSlideIndicator{
+//
+//   CustomSlider(this.currentView);
+//
+//   StoreController storeController = Get.find<StoreController>();
+//   final int currentView;
+//   @override
+//   Widget build(int currentPage, double pageDelta, int itemCount) {
+//     var activeColor = const Color(0xFFFFFFFF);
+//     var backgroundColor = const Color(0x66FFFFFF);
+//
+//     // if (SchedulerBinding.instance.window.platformBrightness ==
+//     //     Brightness.light) {
+//     //   activeColor = const Color(0xFF000000);
+//     //   backgroundColor = const Color(0xFF878484);
+//     // }
+//
+//     return Container(
+//       alignment: alignment,
+//       padding: padding,
+//       child: SizedBox(
+//         width: itemCount * itemSpacing,
+//         height: currentView == currentPage?indicatorRadius*5:indicatorRadius * 5,
+//         child: CustomPaint(
+//           painter: CircularWaveIndicatorPainter(
+//             currentIndicatorColor: currentIndicatorColor ?? activeColor,
+//             indicatorBackgroundColor:
+//             indicatorBackgroundColor ?? backgroundColor,
+//             currentPage: currentPage,
+//             pageDelta: pageDelta,
+//             itemCount: itemCount,
+//             radius: storeController.currentView == currentPage?indicatorRadius*3:indicatorRadius*1.5,
+//             indicatorBorderColor: indicatorBorderColor,
+//             borderWidth: indicatorBorderWidth,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

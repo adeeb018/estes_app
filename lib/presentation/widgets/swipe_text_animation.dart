@@ -12,7 +12,7 @@ class SwipeTextAnimation extends StatefulWidget {
 
 class TextAnimation extends State<SwipeTextAnimation> with TickerProviderStateMixin {
 
-  final StoreController storeController = Get.find<StoreController>();
+  StoreController storeController = Get.find<StoreController>();
   late AnimationController _controller;
   late Animation<double> _positionAnimation;
   late Animation _secondPositionAnimation;
@@ -51,7 +51,20 @@ class TextAnimation extends State<SwipeTextAnimation> with TickerProviderStateMi
       parent: _controller,
       curve: const Interval(0, 1, curve: Curves.easeInQuart),
     ));
+
+    // _controller.addStatusListener((status) {
+    //   print(status);
+    // });
+    // _secondPositionAnimation = ColorTween(begin: Colors.white,end: Colors.blue).animate(CurvedAnimation(
+    //   parent: _controller,
+    //   curve: Interval(0, 1, curve: Curves.linear),
+    // ));
+    // Set the animation to repeat forever
+    // _controller.repeat();
+    //   _controller.forward();
       _controller.repeat();
+    // Uncomment the line below to play the animation only once
+    // _controller.forward();
   }
 
   @override

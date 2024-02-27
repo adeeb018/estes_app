@@ -25,7 +25,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{
       elevation: 0,
       // toolbarHeight: 70.0,
       // backgroundColor: Colors.black,
-      leading: currentView != 1?IconButton(
+      leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios_new_rounded), /////on the first page we don't need backbutton so if no currentView is returned from calling function
         onPressed: () {                                     /////it will not have backbutton
           onpressed!();
@@ -34,7 +34,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{
           }
         },
         color: Colors.white,
-      ):const SizedBox(),
+      ),
       titleSpacing: 0.0,
       title: Image.asset(
         "assets/images/estes_logo_2.png",
