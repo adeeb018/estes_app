@@ -40,7 +40,7 @@ class _WelcomeWidgetState extends State<WelcomeWidget> {
     Future ft = Future((){});
     ft = ft.then((_){
       return Future.delayed(const Duration(seconds: 3),(){
-        Get.to(() => const HomePage());
+        Get.off(() => const HomePage());
       });
     });
   }

@@ -148,7 +148,7 @@ the status listener listen for values forward,completed,reverse and dismissed
       backgroundColor: Colors.black,
       appBar: AppBarWidget(
         onpressed: () {
-          storeController.carouselController.previousPage();
+          storeController.carouselController?.previousPage();
           Future ft = Future(() {});
           ft = ft.then((_){
             return Future.delayed(const Duration(milliseconds: 200),(){/////////////////here on pressing back button we navigate to 5 th currentView of homePage.
@@ -157,60 +157,63 @@ the status listener listen for values forward,completed,reverse and dismissed
           });
         },
       ),
-      body: Stack(
-        children: [
-          BackgroundLoad(context: context),
-          Center(
-            child: Flex(
-              direction: Axis.vertical,
-              children: [
-                Expanded(
-                  flex: 10,
-                  child: Center(
-                    child: CustomPaint(
-                      foregroundPainter: CircleProgress(currentProgress: _animation.value,context:context),
-                      child: GestureDetector(
-                        onLongPressStart: (e) {
-                          isLaunchTimeVisible = true;
-                          _animationController.forward();
-                          _rocketAnimationController.repeat();
-                        },
-                        onLongPressUp: () {
-                          isLaunchTimeVisible = false;
-                          _animationController.reverse();
-                          _rocketAnimationController.reverse();
-                        },
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height/3,
-                          child: Center(child: LoadRocketLaunchAnimation(rocketAnimationController: _rocketAnimationController)),
+      body: PopScope(
+        canPop: false,
+        child: Stack(
+          children: [
+            BackgroundLoad(context: context),
+            Center(
+              child: Flex(
+                direction: Axis.vertical,
+                children: [
+                  Expanded(
+                    flex: 10,
+                    child: Center(
+                      child: CustomPaint(
+                        foregroundPainter: CircleProgress(currentProgress: _animation.value,context:context),
+                        child: GestureDetector(
+                          onLongPressStart: (e) {
+                            isLaunchTimeVisible = true;
+                            _animationController.forward();
+                            _rocketAnimationController.repeat();
+                          },
+                          onLongPressUp: () {
+                            isLaunchTimeVisible = false;
+                            _animationController.reverse();
+                            _rocketAnimationController.reverse();
+                          },
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.height/3,
+                            child: Center(child: LoadRocketLaunchAnimation(rocketAnimationController: _rocketAnimationController)),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Column(
-                    children: [
-                    isLaunchTimeVisible?Text(
-                    '${_launchTime()}',
-                          style: const TextStyle(color: Colors.white),
-                      )
-                      :const SizedBox(),
-                      Container(
-                        alignment: Alignment.topCenter,
-                        height: 50,
-                        child: CorousalText(
-                            text: 'Hold on rocket\nfor 5 Seconds to launch',
-                            color: Colors.white),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                  Expanded(
+                    flex: 6,
+                    child: Column(
+                      children: [
+                      isLaunchTimeVisible?Text(
+                      '${_launchTime()}',
+                            style: const TextStyle(color: Colors.white),
+                        )
+                        :const SizedBox(),
+                        Container(
+                          alignment: Alignment.topCenter,
+                          height: 50,
+                          child: CorousalText(
+                              text: 'Hold on rocket\nfor 5 Seconds to launch',
+                              color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

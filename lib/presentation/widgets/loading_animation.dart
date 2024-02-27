@@ -1,14 +1,15 @@
 import 'dart:developer';
 
+import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+// import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 class LoadingWidget extends StatefulWidget {
   const LoadingWidget({super.key,required this.carouselController});
 
-  final CarouselController carouselController;
+  final CarouselController? carouselController;
   @override
   State<LoadingWidget> createState() => _LoadingWidgetState();
 }
@@ -26,7 +27,7 @@ class _LoadingWidgetState extends State<LoadingWidget> with SingleTickerProvider
     lottieController.addStatusListener((status) {
       if(status == AnimationStatus.completed){
         log("LOTTIE STATUS Completed");
-        widget.carouselController.nextPage();
+        widget.carouselController?.nextPage();
         Get.back();
       }
     });
