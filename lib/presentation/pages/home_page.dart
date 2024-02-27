@@ -5,7 +5,6 @@ import 'package:estes_app/presentation/widgets/background_image_widget.dart';
 import 'package:estes_app/presentation/widgets/pairing_code.dart';
 import 'package:estes_app/presentation/widgets/swipe_widget.dart';
 import 'package:estes_app/presentation/widgets/volume_text_image.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
