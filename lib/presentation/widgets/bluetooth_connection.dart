@@ -37,7 +37,16 @@ class BluetoothScreen {
 
   Future<bool> connect() async {
     if (deviceToConnect != null) {
-      await deviceToConnect?.device.connect();
+      try{
+        await deviceToConnect?.device.connect();
+      }
+      on FlutterBluePlusException catch(e){
+        log('Connect Error is ${e.code}');
+        if(e.code == 133){
+          connect();
+          return true;
+        }
+    }
       if(deviceToConnect!.device.isConnected){
         return true;
       }
