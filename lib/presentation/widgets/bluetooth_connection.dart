@@ -8,8 +8,9 @@ class BluetoothScreen {
   BluetoothScreen() {
     var subscription = FlutterBluePlus.onScanResults.listen((results){
         if (results.isNotEmpty) {
-          log("BLE APP result is there");
+          // log("BLE APP result is there");
           ScanResult r = results.last; // the most recently found device
+          // log('${r.device.remoteId}: "${r.advertisementData.advName}" found!');
           if (r.advertisementData.advName == "DSD TECH") {
             deviceToConnect = r;
             log('${r.device.remoteId}: "${r.advertisementData.advName}" found!');
@@ -29,14 +30,14 @@ class BluetoothScreen {
         .where((val) => val == BluetoothAdapterState.on)
         .first;
 
-    await FlutterBluePlus.startScan(timeout: const Duration(seconds: 5), withServices:[Guid("180D")],
-      withNames:["DSD TECH"]);
+    await FlutterBluePlus.startScan(timeout: const Duration(seconds: 5));//guid 1811 for esp32 , withServices:[Guid("1811")]
 
     await FlutterBluePlus.isScanning.where((val) => val == false).first;
   }
 
   Future<bool> connect() async {
     if (deviceToConnect != null) {
+        // log('$deviceToConnect\n');
       try{
         await deviceToConnect?.device.connect();
       }
@@ -44,10 +45,12 @@ class BluetoothScreen {
         log('Connect Error is ${e.code}');
         if(e.code == 133){
           connect();
+          log('ESTES connected');
           return true;
         }
     }
       if(deviceToConnect!.device.isConnected){
+        log('ESTES connected');
         return true;
       }
       else{

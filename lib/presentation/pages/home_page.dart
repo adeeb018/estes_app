@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:estes_app/presentation/pages/page_theme_1.dart';
 import 'package:estes_app/presentation/pages/welcome_page.dart';
 import 'package:estes_app/presentation/widgets/background_image_widget.dart';
+import 'package:estes_app/presentation/widgets/bluetooth_connection.dart';
 import 'package:estes_app/presentation/widgets/pairing_code.dart';
 import 'package:estes_app/presentation/widgets/swipe_widget.dart';
 import 'package:estes_app/presentation/widgets/volume_text_image.dart';
@@ -293,7 +294,8 @@ class _HomePageState extends State<HomePage> {
     If location and bluetooth is on, then it start scanning, and move to next carousel screen
    */
 
-  void _moveToNextOnLocationOn(){
+  _moveToNextOnLocationOn(){
+    storeController.bluetoothScreen = BluetoothScreen();
     _startBluetoothScan(); ////////////////////////////////////////////here we start scanning for the bluetooth devices.
     _carouselController?.nextPage();
   }

@@ -56,6 +56,6 @@ class BackgroundLoad extends StatelessWidget {
   background image is retrieved from getX controller which is setted with theme in settings.
    */
   AssetImage _backgroundImage() {
-      return AssetImage('assets/images/${storeController.currentBackground}.png');
+      return AssetImage('assets/images/${storeController.currentBackground}');
   }
 }

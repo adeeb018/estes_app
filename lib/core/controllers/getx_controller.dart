@@ -16,7 +16,7 @@ class StoreController extends GetxController{
 
   // var selectedPairingCode = false.obs;
 
-  var currentBackground = 'second_screen';
+  var currentBackground = 'first_screen.png';
 
   var currentFont = 'MuseoModerno'.obs;
 
@@ -24,7 +24,7 @@ class StoreController extends GetxController{
 
   final CarouselController? carouselController = CarouselController();
 
-  final BluetoothScreen bluetoothScreen = BluetoothScreen();
+  late BluetoothScreen bluetoothScreen;
 
 
 }
