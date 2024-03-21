@@ -1,6 +1,7 @@
 import 'package:estes_app/core/controllers/getx_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:io';
 
 class BackgroundLoad extends StatelessWidget {
   BackgroundLoad({super.key,required this.context});
@@ -25,7 +26,7 @@ class BackgroundLoad extends StatelessWidget {
       if (storeController.currentTheme.value == 4) {
         return _backgroundImageContainer();
       } else {
-        return const SizedBox();
+        return _backgroundImageContainer();
       }
     });
   }
@@ -55,7 +56,10 @@ class BackgroundLoad extends StatelessWidget {
   /*
   background image is retrieved from getX controller which is setted with theme in settings.
    */
-  AssetImage _backgroundImage() {
+  ImageProvider _backgroundImage() {
+      if(storeController.currentTheme > 4){
+        return FileImage(File(storeController.currentBackgroundPath.value));
+      }
       return AssetImage('assets/images/${storeController.currentBackground}');
   }
 }

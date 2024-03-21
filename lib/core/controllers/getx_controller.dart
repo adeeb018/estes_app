@@ -26,5 +26,7 @@ class StoreController extends GetxController{
 
   late BluetoothScreen bluetoothScreen;
 
+  var currentBackgroundPath = ''.obs;
+
 
 }
