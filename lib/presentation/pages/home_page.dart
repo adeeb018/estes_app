@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:get/get.dart';
-import 'package:permission_handler/permission_handler.dart';
 import '../../core/services/location_service.dart';
 import '../widgets/appbar_widget.dart';
 import '../widgets/corousal_text_style.dart';
@@ -97,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                 child: CarouselSlider(
                     carouselController: _carouselController,
                     options: CarouselOptions(
-                      scrollPhysics: const NeverScrollableScrollPhysics(),
+                      // scrollPhysics: const NeverScrollableScrollPhysics(),
                       onPageChanged: (index, reason){
                         currentView = index + 1;
                         //setState is called to update the current page with respect to the current view

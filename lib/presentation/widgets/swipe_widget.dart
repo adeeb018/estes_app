@@ -82,7 +82,7 @@ class SwipeWidget extends StatelessWidget {
             border: Border.all(width: 5,color: Colors.black),////////////////////////////////////////////////width of square swipe
             borderRadius: storeController.currentTheme.value == 4?null:const BorderRadius.all(Radius.circular(15)),// border radius of square swipe
           ),
-          child: Icon(Icons.arrow_forward_ios_rounded,size: 40,color: Colors.grey,opticalSize: 10,));
+          child: const Icon(Icons.arrow_forward_ios_rounded,size: 40,color: Colors.grey,opticalSize: 10,));
     }
   }
 

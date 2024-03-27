@@ -65,8 +65,6 @@ class BluetoothScreen1 {
     // }
     List<Map<String,String>> jsonList = [];// = set.toList();
     // String jsonResult = jsonEncode(list);
-    String jsonResult;
-    int i=0;
     for (ScanResult element in set) {
       // jsonString.add('{"Mac_ID":"${element.device.remoteId}", "advertisementName":"${element.advertisementData.advName}"}');
       Map<String,String> myMap = {"MacId":"${element.device.remoteId}", "advertisementName":element.advertisementData.advName};

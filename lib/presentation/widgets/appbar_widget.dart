@@ -1,5 +1,5 @@
 import 'package:estes_app/core/controllers/getx_controller.dart';
-import 'package:estes_app/presentation/pages/settings_page.dart';
+import 'package:estes_app/presentation/pages/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{

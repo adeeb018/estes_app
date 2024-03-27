@@ -1,5 +1,5 @@
 import 'package:estes_app/core/controllers/getx_controller.dart';
-import 'package:estes_app/core/controllers/themeBorderProvider.dart';
+import 'package:estes_app/core/controllers/theme_border_provider.dart';
 import 'package:estes_app/presentation/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

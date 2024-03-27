@@ -1,10 +1,9 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:estes_app/core/controllers/themeBorderProvider.dart';
+import 'package:estes_app/core/controllers/theme_border_provider.dart';
+import 'package:estes_app/presentation/pages/settings/widgets.dart';
 import 'package:estes_app/presentation/widgets/appbar_widget.dart';
-import 'package:estes_app/presentation/widgets/corousal_text_style.dart';
 import 'package:estes_app/presentation/widgets/image_path_and_name.dart';
 import 'package:estes_app/presentation/widgets/upload_background_image.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,7 @@ import 'package:estes_app/core/controllers/getx_controller.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../widgets/background_image_widget.dart';
+import '../../widgets/background_image_widget.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -21,45 +20,7 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class ImageContainers {
-  ///bool type false for add button and bool type true for normal image container
-  final bool type;
-  final String? imageName;
-  final String? imagePath;
-  bool selectedContainer;
 
-  /// storage type false for assetImage storage type and true for File image
-  bool storageType;
-
-  ImageContainers(
-      {required this.type,
-      this.imageName,
-      this.imagePath,
-      this.selectedContainer = false,
-      this.storageType = false});
-
-  // Convert ImageContainers object to a map
-  Map<String, dynamic> toJson() {
-    return {
-      'type': type,
-      'imageName': imageName,
-      'imagePath': imagePath,
-      'selectedContainer': selectedContainer,
-      'storageType': storageType,
-    };
-  }
-
-  factory ImageContainers.fromJson(Map<String, dynamic> json) {
-    return ImageContainers(
-      type: json['type'] ?? false,
-      // Providing a default value in case type is missing
-      imageName: json['imageName'],
-      imagePath: json['imagePath'],
-      selectedContainer: json['selectedContainer'] ?? false,
-      storageType: json['storageType']?? false,
-    );
-  }
-}
 
 class _SettingsPageState extends State<SettingsPage> {
   final StoreController storeController = Get.find<StoreController>();
@@ -104,38 +65,15 @@ class _SettingsPageState extends State<SettingsPage> {
     if (containsValue) {
       //if anything present on shared preference then copy it in to imageContainer object by clearing all of the data in it.
       imageContainers.clear();
-      imageContainers = [...await _loadImageContainersList()];
+      imageContainers = [...await SaveOrLoadImageFromSP.loadImageContainersList('imageContainersList')];
       log('SHARED PREFERENCE IS ALREADY INITIALIZED');
     } else {
       //convert imageNames list to json and add to sharedPreferences.
-      _saveImageContainersList(imageContainers);
+      SaveOrLoadImageFromSP.saveImageContainersList(imageContainers,'imageContainersList');
       log('SHARED PREFERENCE initialized');
     }
   }
 
-  _loadImageContainersList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? jsonString = prefs.getString('imageContainersList');
-
-    if (jsonString != null) {
-      List<dynamic> mappedList = jsonDecode(jsonString);
-      List<ImageContainers> imageContainersList =
-          mappedList.map((map) => ImageContainers.fromJson(map)).toList();
-      return imageContainersList;
-    } else {
-      log('SHARED PREFERENCE LOAD ERROR');
-    }
-  }
-
-  _saveImageContainersList(List<ImageContainers> list) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-    // Convert the list of ImageContainers to a list of maps
-    List<Map<String, dynamic>> mappedList =
-        list.map((container) => container.toJson()).toList();
-    String jsonString = jsonEncode(mappedList);
-    await prefs.setString('imageContainersList', jsonString);
-  }
   /*
   this function is used to select the current background image on Loading
    */
@@ -164,55 +102,58 @@ class _SettingsPageState extends State<SettingsPage> {
       body: PopScope(
         canPop: false,
         child: FutureBuilder(
-          future: _builderInitialize(),
-          builder: (context, snapshot) {
-            if(snapshot.connectionState ==ConnectionState.waiting){
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+            future: _builderInitialize(),
+            builder: (context, snapshot) {
+              if(snapshot.connectionState ==ConnectionState.waiting){
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              else if(snapshot.hasError){
+                return Text('Error - ${snapshot.error}');
+              }
+              else{
+                return Stack(
+                  children: [
+                    BackgroundLoad(
+                      context: context,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _themeHeading(),
+                        _themeContainers(),
+                      ],
+                    )
+                  ],
+                );
+              }
             }
-            else if(snapshot.hasError){
-              return Text('Error - ${snapshot.error}');
-            }
-            else{
-              return Stack(
-                children: [
-                  BackgroundLoad(
-                    context: context,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _themeHeading(),
-                      _themeContainers(),
-                    ],
-                  )
-                ],
-              );
-            }
-          }
         ),
       ),
     );
   }
 
   Widget _themeContainers() {
-    return Expanded(
-      child: GridView.builder(
-        // physics: NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(25.0),
-        itemCount: imageContainers.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 20.0,
-            mainAxisSpacing: 20.0,
-            childAspectRatio: 0.8),
-        itemBuilder: (context, index) {
-          // print(imageNames.length);
-          return _themeButtons(index);
-        },
-      ),
-    );
+    return Consumer<ThemeBorderProvider>(
+        builder: (context, dataProvider, _) {
+          return Expanded(
+            child: GridView.builder(
+              // physics: NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(25.0),
+              itemCount: imageContainers.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20.0,
+                  mainAxisSpacing: 20.0,
+                  childAspectRatio: 0.8),
+              itemBuilder: (context, index) {
+                // print(imageNames.length);
+                return _themeButtons(index,dataProvider);
+              },
+            ),
+          );
+        });
   }
 
   Padding _themeHeading() {
@@ -226,10 +167,8 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
 
-  Widget _themeButtons(int index) {
+  Widget _themeButtons(int index,ThemeBorderProvider dataProvider) {
     int themeVal = index + 1;
-    return Consumer<ThemeBorderProvider>(
-        builder: (context, dataProvider, _){
           return GestureDetector(
             onTap: () {
               for (ImageContainers imageContainer in imageContainers) {
@@ -254,14 +193,12 @@ class _SettingsPageState extends State<SettingsPage> {
               child: _addNewTheme(index),
             ),
           );
-        }
-        );
   }
 
 
   DecorationImage? _imageOrAddFile(int index) {
     if (imageContainers[index].type) {
-      return DecorationImage(image: _loadImage(index), fit: BoxFit.fill);
+      return DecorationImage(image: _loadImage(index), fit: BoxFit.cover);
     }
     else{
     }
@@ -289,7 +226,7 @@ class _SettingsPageState extends State<SettingsPage> {
       return Center(
         child: IconButton(
           onPressed: _loadImageFromStorage,
-          icon: Icon(Icons.add_circle_outline_rounded,color: Colors.white,size: 50),
+          icon: const Icon(Icons.add_circle_outline_rounded,color: Colors.white,size: 50),
           ///////////////// for the last container we add a '+' icon to its center.
 
         ),
@@ -304,13 +241,17 @@ class _SettingsPageState extends State<SettingsPage> {
       log('NO IMAGE LOADED FROM EXTERNAL STORAGE');
     }else{
       ImageContainers newImage = ImageContainers(type: true,imagePath: imageDetails.imagePath,storageType: true,imageName: imageDetails.imageName);
-      // imageContainers.insert(imageContainers.length - 1, newImage);
-      imageContainers.add(newImage);
-      _saveImageContainersList(imageContainers);
-      // _loadImageContainersList();
-      setState(() {
+      imageContainers.insert(imageContainers.length - 1, newImage);
+      // imageContainers.insert(newImage);
+      SaveOrLoadImageFromSP.saveImageContainersList(imageContainers,'imageContainersList');
+      if(context.mounted){
+        Provider.of<ThemeBorderProvider>(context, listen: false).changeGridLength(imageContainers.length + 1);
+      }
 
-      });
+      // _loadImageContainersList();
+      // setState(() {
+      //
+      // });
     }
   }
 
