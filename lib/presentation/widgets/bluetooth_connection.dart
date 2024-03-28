@@ -30,7 +30,7 @@ class BluetoothScreen {
         .where((val) => val == BluetoothAdapterState.on)
         .first;
 
-    await FlutterBluePlus.startScan(timeout: const Duration(seconds: 5));//guid 1811 for esp32 , withServices:[Guid("1811")]
+    await FlutterBluePlus.startScan(timeout: const Duration(seconds: 3));//guid 1811 for esp32 , withServices:[Guid("1811")]
 
     await FlutterBluePlus.isScanning.where((val) => val == false).first;
   }

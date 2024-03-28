@@ -11,10 +11,14 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{
     super.key,
     required this.onpressed, ////////////////onpressed is taken as function in constructor to call backbutton here
     this.currentView,
+    this.isSettings = false,
   });
   final void Function()? onpressed;
 
   final int? currentView;
+
+  ///true if the page currently is settings
+  final bool isSettings;
 
   final StoreController storeController = Get.find<StoreController>();
 
@@ -41,9 +45,9 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{
         scale: 2.0,
       ),
       actions: [
-        IconButton(
+        isSettings?const SizedBox():IconButton(
           onPressed: () {
-            Get.to(() => const SettingsPage());
+            Get.to(() => const SettingsPage(),transition: Transition.cupertino,duration: const Duration(milliseconds: 500));
           },
           icon: const Icon(Icons.settings),
           iconSize: 30.0,

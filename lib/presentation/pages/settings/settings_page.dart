@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:estes_app/core/controllers/theme_border_provider.dart';
+import 'package:estes_app/core/controllers/provider_controller.dart';
 import 'package:estes_app/presentation/pages/settings/widgets.dart';
 import 'package:estes_app/presentation/widgets/appbar_widget.dart';
 import 'package:estes_app/presentation/widgets/image_path_and_name.dart';
@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/background_image_widget.dart';
+import '../../widgets/corousal_text_style.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -98,6 +99,7 @@ class _SettingsPageState extends State<SettingsPage> {
         onpressed: () {
           Get.back();
         },
+        isSettings: true,
       ),
       body: PopScope(
         canPop: false,
@@ -123,6 +125,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       children: [
                         _themeHeading(),
                         _themeContainers(),
+                        _themeFonts(),
                       ],
                     )
                   ],
@@ -134,8 +137,24 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+
+  //////////themHeading section
+
+  Padding _themeHeading() {
+    return const Padding(
+      padding: EdgeInsets.only(left: 25.0, top: 80),
+      child: Text(
+        'Add a Background Image',
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
+
+  /////////_themeContainer Section
+
   Widget _themeContainers() {
-    return Consumer<ThemeBorderProvider>(
+    return Consumer<ProviderController>(
         builder: (context, dataProvider, _) {
           return Expanded(
             child: GridView.builder(
@@ -156,32 +175,30 @@ class _SettingsPageState extends State<SettingsPage> {
         });
   }
 
-  Padding _themeHeading() {
-    return const Padding(
-      padding: EdgeInsets.only(left: 25.0, top: 80),
-      child: Text(
-        'Add a Background Image',
-        style: TextStyle(color: Colors.white),
-      ),
-    );
-  }
 
-
-  Widget _themeButtons(int index,ThemeBorderProvider dataProvider) {
+  Widget _themeButtons(int index,ProviderController dataProvider) {
     int themeVal = index + 1;
           return GestureDetector(
             onTap: () {
-              for (ImageContainers imageContainer in imageContainers) {
-                imageContainer.selectedContainer = false;
-              }
-              storeController.currentTheme.value = themeVal;
+              // if we press on add image Container background image should not be changed
               if (imageContainers[index].type) {
+
+                storeController.currentTheme.value = themeVal;
+
+                for (ImageContainers imageContainer in imageContainers) {
+                  imageContainer.selectedContainer = false;
+                }
+
+                // image added from storage , if the image is asset we can load that image from its name itself.
                 if(imageContainers[index].storageType){
                   storeController.currentBackgroundPath.value = imageContainers[index].imagePath!;
                 }
-                storeController.currentBackground = imageContainers[index].imageName!; // problem here
+                storeController.currentBackground = imageContainers[index].imageName!;
                 imageContainers[index].selectedContainer = true;
-                Provider.of<ThemeBorderProvider>(context, listen: false).changeBorderSelected(index + 1);
+                Provider.of<ProviderController>(context, listen: false).changeBorderSelected(index + 1);
+              }
+              else{
+                _loadImageFromStorage();
               }
             },
             child: Container(
@@ -245,13 +262,8 @@ class _SettingsPageState extends State<SettingsPage> {
       // imageContainers.insert(newImage);
       SaveOrLoadImageFromSP.saveImageContainersList(imageContainers,'imageContainersList');
       if(context.mounted){
-        Provider.of<ThemeBorderProvider>(context, listen: false).changeGridLength(imageContainers.length + 1);
+        Provider.of<ProviderController>(context, listen: false).changeGridLength(imageContainers.length + 1);
       }
-
-      // _loadImageContainersList();
-      // setState(() {
-      //
-      // });
     }
   }
 
@@ -265,4 +277,63 @@ class _SettingsPageState extends State<SettingsPage> {
           imageContainers[index].imagePath ?? 'assets/images/first_screen.png');
     }
   }
+
+
+  ///////////////_themFonts section
+
+
+
+  Column _themeFonts() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 25.0),
+          child: SizedBox(
+            height: 50,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              // mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                // Padding(padding: EdgeInsets.only(top: 0)),
+                _styleButton('MuseoModerno', 'Font 1'),
+                _styleButton('Khyay', 'Font 2'),
+                _styleButton('Orbitron', 'Font 3'),
+                _styleButton('AllertaStencil', 'Font 4'),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /*
+  this function return a button with text styles will be setted by the value in parameter
+   */
+  Widget _styleButton(String font, String styleText) {
+    return Obx(() => Container(
+      decoration: BoxDecoration(
+          border: storeController.currentFont.value == font
+              ? Border.all(
+            color: Colors.pinkAccent, // border color on selection
+            width: 2.0,
+          )
+              : null),
+      child: TextButton(
+          onPressed: () {
+            storeController.currentFont.value = font;
+          },
+          child: CorousalText(
+            text: styleText,
+            color: Colors.white,
+            font: font,
+          )),
+    ));
+  }
+
+
+
 }
+
+

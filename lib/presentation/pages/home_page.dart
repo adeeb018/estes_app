@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:estes_app/core/controllers/provider_controller.dart';
 import 'package:estes_app/presentation/pages/page_theme_1.dart';
 import 'package:estes_app/presentation/pages/welcome_page.dart';
 import 'package:estes_app/presentation/widgets/background_image_widget.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import '../../core/services/location_service.dart';
 import '../widgets/appbar_widget.dart';
 import '../widgets/corousal_text_style.dart';
@@ -96,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                 child: CarouselSlider(
                     carouselController: _carouselController,
                     options: CarouselOptions(
-                      // scrollPhysics: const NeverScrollableScrollPhysics(),
+                      scrollPhysics: const NeverScrollableScrollPhysics(),
                       onPageChanged: (index, reason){
                         currentView = index + 1;
                         //setState is called to update the current page with respect to the current view
@@ -131,6 +133,16 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+        Consumer<ProviderController>(builder: (context, dataProvider, _){
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 15.0),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: dataProvider.isLoading?const CircularProgressIndicator(color: Colors.white,):null,
+            ),
+          );
+        })
+
       ],
     );
   }
@@ -277,7 +289,7 @@ class _HomePageState extends State<HomePage> {
    */
 
   _startBluetoothScan() async{
-    storeController.bluetoothScreen.scan();
+   await storeController.bluetoothScreen.scan();
   }
 
   /*
@@ -293,9 +305,13 @@ class _HomePageState extends State<HomePage> {
     If location and bluetooth is on, then it start scanning, and move to next carousel screen
    */
 
-  _moveToNextOnLocationOn(){
+  _moveToNextOnLocationOn() async{
+    Provider.of<ProviderController>(context, listen: false).changeIsLoading(true);
     storeController.bluetoothScreen = BluetoothScreen();
-    _startBluetoothScan(); ////////////////////////////////////////////here we start scanning for the bluetooth devices.
+    await _startBluetoothScan(); ////////////////////////////////////////////here we start scanning for the bluetooth devices.
+    if(context.mounted){
+      Provider.of<ProviderController>(context, listen: false).changeIsLoading(false);
+    }
     _carouselController?.nextPage();
   }
 
@@ -309,25 +325,24 @@ class _HomePageState extends State<HomePage> {
       if(isLocationOn){
         _moveToNextOnLocationOn();
       }else{
-        const snackBar = SnackBar(
-              content: Text('Please turn On location and bluetooth or else App features won\'t work'),);
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            ScaffoldMessenger.of(context).showSnackBar(snackBarText('Please turn On location and bluetooth or else App features won\'t work'));
       }
     }
     else if(currentView == 2){//////////////////////////////////////////if we press next on second view page if the pairing code is ok then it connect with the bluetooth device and
-      const snackBar = SnackBar(////////////////////////////////////////move to next view in the page if connection problem occurs a snackbar is shown to the user
-        content: Text('Try again!!Not Connected'),
-      );
+      Provider.of<ProviderController>(context, listen: false).changeIsLoading(true);
       if(_isPairingCodeOk()){
         if(await storeController.bluetoothScreen.connect()) {
+          context.mounted?Provider.of<ProviderController>(context, listen: false).changeIsLoading(false):null;
           _carouselController?.nextPage();
         }
         else if(context.mounted){
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          Provider.of<ProviderController>(context, listen: false).changeIsLoading(false);
+          ScaffoldMessenger.of(context).showSnackBar(snackBarText('Device not Found on scanning, Please return to previous menu and tap on Next to Scan Again'));
           return;
         }
       }else{
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        Provider.of<ProviderController>(context, listen: false).changeIsLoading(false);
+        ScaffoldMessenger.of(context).showSnackBar(snackBarText('Incorrect Pairing code, Try Again'));
         return;
       }
     }
@@ -346,6 +361,13 @@ class _HomePageState extends State<HomePage> {
     else{
       _carouselController?.nextPage();
     }
+  }
+
+  SnackBar snackBarText(String text) {
+    return SnackBar(////////////////////////////////////////move to next view in the page if connection problem occurs a snackbar is shown to the user
+      content: Text(text),
+      duration: const Duration(seconds: 2),
+    );
   }
 
   /*

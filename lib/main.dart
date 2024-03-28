@@ -1,5 +1,5 @@
 import 'package:estes_app/core/controllers/getx_controller.dart';
-import 'package:estes_app/core/controllers/theme_border_provider.dart';
+import 'package:estes_app/core/controllers/provider_controller.dart';
 import 'package:estes_app/presentation/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,9 +18,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ThemeBorderProvider>(
-        create: (context) => ThemeBorderProvider(),
-        child: Consumer<ThemeBorderProvider>(
+    return ChangeNotifierProvider<ProviderController>(
+        create: (context) => ProviderController(),
+        child: Consumer<ProviderController>(
             builder: (context, themeProvider, child) => const GetMaterialApp(
                   debugShowCheckedModeBanner: true,
                   title: 'estes',
